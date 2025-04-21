@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await requestMicrophoneAccess();
     }
 
+
     // Actualizar UI con datos actuales
     updatePhaseInfo();
     // Configurar eventos de botones
@@ -211,6 +212,7 @@ function showPermissionDialog() {
         });
     });
 }
+
 
 // Cargar estado de la aplicación
 function loadAppState() {
@@ -567,15 +569,6 @@ function trackExercise(exercise) {
             <div id="sets-container">
                 </div>
 
-            <div class="voice-instructions">
-                <p>Di en voz alta las repeticiones y el peso. Por ejemplo:</p>
-                <ul>
-                    <li>"12 repeticiones con 20 kilos"</li>
-                    <li>"8 reps 15 kg"</li>
-                    <li>"10 repeticiones" (para ejercicios sin peso)</li>
-                </ul>
-            </div>
-
             <button id="voice-button" class="btn btn-voice" onclick="toggleVoiceRecognition()">
                 🎤 Iniciar reconocimiento de voz
             </button>
@@ -779,7 +772,7 @@ function startHIITTimer() {
             <h2>Temporizador HIIT</h2>
             <div id="hiit-status">Preparados...</div>
             <div id="hiit-timer" class="timer-display">00:${workTime}</div>
-            <div id="hiit-round">Ronda: 1 / ${totalRounds}</div>
+            <div id="hiit-round">Ronda: ${currentRound} / ${totalRounds}</div>
             <div id="hiit-phase">Trabajo</div>
             <button id="btn-stop-hiit" class="btn btn-danger" onclick="showHIITWorkout()">Detener</button>
         </div>
