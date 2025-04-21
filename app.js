@@ -74,29 +74,109 @@ const workoutProgram = {
     ],
     // Alternativas para máquinas ocupadas
     alternatives: {
-        'Press de Pecho con Barra': [
-            { name: 'Flexiones Estándar', instructions: 'Colócate en posición de plancha con manos a altura de hombros.' },
-            { name: 'Fondos entre Bancos', instructions: 'Siéntate entre dos bancos, manos detrás, baja y sube.' }
-        ],
-        'Dominadas/Jalón al Pecho': [
-            { name: 'Remo con Mancuerna', instructions: 'Apoya rodilla y mano en banco, tira de mancuerna hacia arriba.' },
-            { name: 'Superman', instructions: 'Tumbado boca abajo, eleva brazos y piernas simultáneamente.' }
+        'Press de Hombros con Barra': [
+            { name: 'Press de Hombros con Mancuernas', instructions: 'Sentado o de pie, sostén una mancuerna en cada mano a la altura de los hombros y presiona hacia arriba.' },
+            { name: 'Flexiones de Pica (Pike Push-ups)', instructions: 'Desde posición de plancha alta, levanta las caderas formando una "V" invertida. Baja la cabeza hacia el suelo doblando los codos y empuja hacia arriba.' }
         ],
         'Sentadilla con Barra': [
-            { name: 'Sentadillas Búlgaras', instructions: 'Un pie elevado atrás, baja hasta que muslo esté paralelo al suelo.' },
-            { name: 'Peso Muerto Rumano', instructions: 'Inclina torso adelante con espalda recta, rodillas ligeramente flexionadas.' }
+            { name: 'Sentadilla con Mancuernas (Goblet Squat)', instructions: 'Sujeta una mancuerna verticalmente contra tu pecho. Baja las caderas hacia el suelo manteniendo la espalda recta.' },
+            { name: 'Sentadilla Búlgara con Mancuernas', instructions: 'De pie frente a un banco, coloca el pie trasero sobre él. Sostén una mancuerna en cada mano. Baja la rodilla trasera hacia el suelo, manteniendo el torso recto, y luego sube.' }
         ],
-        'Press de Hombros con Barra': [
-            { name: 'Press de Hombros con Mancuernas', instructions: 'De pie con mancuernas a la altura de los hombros, empuja hacia arriba.' },
-            { name: 'Elevaciones Laterales', instructions: 'De pie con mancuernas a los lados, eleva brazos hasta altura de hombros.' }
+        'Press de Pecho con Mancuernas': [
+             { name: 'Flexiones (Push-ups)', instructions: 'Desde posición de plancha, baja el pecho hacia el suelo doblando los codos, manteniendo el cuerpo recto.' },
+             { name: 'Aperturas con Mancuernas en el suelo', instructions: 'Acuéstate en el suelo con una mancuerna en cada mano. Abre los brazos hacia los lados con los codos ligeramente doblados y luego ciérralos sobre el pecho.' }
         ],
         'Remo Inclinado con Barra': [
-            { name: 'Remo con Banda Elástica', instructions: 'Pisa banda elástica, agarra extremos y tira hacia el abdomen.' },
-            { name: 'Remo Invertido con TRX', instructions: 'Sujeta TRX inclinado hacia atrás, tira del cuerpo hacia arriba.' }
+            { name: 'Remo con Mancuerna a una mano', instructions: 'Apoya la rodilla y la mano de un lado en un banco. Tira de una mancuerna hacia arriba con la otra mano, llevando el codo cerca del cuerpo.' },
+            { name: 'Remo Invertido (Peso Corporal)', instructions: 'Usa una barra baja o el borde resistente de una mesa. Cuelga debajo y tira del pecho hacia la barra, manteniendo el cuerpo recto.' }
         ],
         'Peso Muerto con Mancuernas': [
-            { name: 'Peso Muerto con Banda Elástica', instructions: 'Pisa banda elástica, agarra extremos y eleva extendiendo cadera.' },
-            { name: 'Puente de Glúteos', instructions: 'Tumbado boca arriba, pies apoyados, eleva cadera y aprieta glúteos.' }
+            { name: 'Peso Muerto Rumano con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Inclínate hacia adelante desde las caderas con la espalda recta y las piernas casi extendidas, bajando las mancuernas hacia los pies. Regresa a la posición inicial.' },
+            { name: 'Puente de Glúteos (Peso Corporal)', instructions: 'Acuéstate boca arriba con las rodillas dobladas y los pies apoyados en el suelo. Levanta las caderas apretando los glúteos.' }
+        ],
+        'Estocada con Mancuernas': [
+            { name: 'Estocada con Peso Propio', instructions: 'Da un paso largo hacia adelante con una pierna y baja las caderas hasta que ambas rodillas estén dobladas a unos 90 grados. Empuja con el pie delantero para volver a la posición inicial.' },
+            { name: 'Zancada Caminando con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Da un paso hacia adelante en una estocada, luego empuja con la pierna trasera para avanzar a la siguiente estocada, caminando hacia adelante.' }
+        ],
+        'Curl de Bíceps con Barra': [
+            { name: 'Curl de Bíceps con Mancuernas (Alterno)', instructions: 'De pie, sostén una mancuerna en cada mano. Alterna el levantamiento de una mancuerna hacia el hombro, girando la palma hacia arriba.' },
+            { name: 'Curl de Bíceps Martillo con Mancuernas', instructions: 'De pie, sostén una mancuerna en cada mano con las palmas mirándose entre sí. Levanta las mancuernas hacia los hombros manteniendo las palmas enfrentadas.' }
+        ],
+        'Fondos en Banco': [
+            { name: 'Fondos entre Bancos (Peso Corporal)', instructions: 'Apoya las manos en el borde de un banco detrás de ti, con las piernas extendidas y los talones en el suelo o en otro banco. Baja el cuerpo doblando los codos y luego empuja hacia arriba.' },
+            { name: 'Flexiones Cerradas (Close-Grip Push-ups)', instructions: 'Realiza flexiones con las manos más juntas que el ancho de los hombros para enfatizar los tríceps.' }
+        ],
+        'Swing con Kettlebell': [
+            { name: 'Swing con Mancuerna', instructions: 'Sostén una mancuerna por un extremo con ambas manos. Inclínate desde las caderas, balancea la mancuerna entre las piernas y luego impúlsala hacia adelante y arriba con un movimiento explosivo de cadera.' },
+            { name: 'Peso Muerto Explosivo con Mancuernas', instructions: 'Realiza un peso muerto con mancuernas, concentrándote en una extensión rápida y potente de las caderas al finalizar el movimiento.'}
+        ],
+        'Crunch con Balón Medicinal': [
+            { name: 'Crunch con Peso (Mancuerna o Disco)', instructions: 'Acuéstate boca arriba con las rodillas dobladas. Sostén una mancuerna o disco contra tu pecho. Contrae los abdominales para levantar los hombros del suelo.' },
+            { name: 'Elevación de Piernas (Peso Corporal)', instructions: 'Acuéstate boca arriba y levanta las piernas rectas hacia el techo, manteniendo la zona lumbar pegada al suelo. Bájalas lentamente.' }
+        ],
+        'Clean con Barra': [
+            { name: 'High Pull con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Inclínate ligeramente desde las caderas y rodillas. Levanta explosivamente las mancuernas hacia arriba, llevando los codos en alto.' },
+            { name: 'Sentadilla con Salto (Peso Corporal)', instructions: 'Realiza una sentadilla normal y luego salta explosivamente hacia arriba. Aterriza suavemente de vuelta en una sentadilla.' }
+        ],
+        'Sentadilla Frontal con Barra': [
+            { name: 'Sentadilla con Mancuernas (Goblet Squat)', instructions: 'Sujeta una mancuerna verticalmente contra tu pecho. Realiza una sentadilla bajando las caderas hacia el suelo, manteniendo la espalda recta y el torso erguido.' },
+            { name: 'Sentadilla Zercher (Peso Corporal o con Peso Improvado)', instructions: 'Sostén un peso (o tus manos entrelazadas) en la curva de tus codos, cerca del cuerpo. Realiza una sentadilla manteniendo el torso lo más vertical posible.' }
+        ],
+        'Press de Pecho Inclinado con Mancuernas': [
+            { name: 'Flexiones Inclinadas (Manos Elevadas)', instructions: 'Realiza flexiones con las manos apoyadas en una superficie elevada (banco, silla) para enfocar la parte inferior del pecho y hombros.' },
+            { name: 'Aperturas Inclinadas con Mancuernas', instructions: 'Acuéstate en un banco inclinado. Sostén una mancuerna en cada mano con los codos ligeramente doblados. Baja las mancuernas hacia los lados en un arco y luego levántalas contrayendo el pecho.' }
+        ],
+        'Dominadas/Jalón al Pecho': [
+            { name: 'Remo con Mancuerna a una mano', instructions: 'Apoya la rodilla y la mano de un lado en un banco. Con la otra mano, tira de una mancuerna hacia arriba, llevando el codo cerca del cuerpo.' },
+            { name: 'Remo Invertido (Peso Corporal)', instructions: 'Usa una barra baja o el borde resistente de una mesa. Cuelga debajo y tira del pecho hacia la barra, manteniendo el cuerpo recto.' }
+        ],
+        'Peso Muerto con Barra': [
+            { name: 'Peso Muerto con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Baja las mancuernas hacia el suelo doblando las rodillas y manteniendo la espalda recta. Levanta el peso extendiendo las caderas y las rodillas.' },
+            { name: 'Puente de Glúteos con Peso (Mancuerna)', instructions: 'Acuéstate boca arriba con las rodillas dobladas. Coloca una mancuerna sobre tus caderas. Levanta las caderas del suelo apretando los glúteos.' }
+        ],
+        'Estocada con Barra': [
+            { name: 'Estocada con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Da un paso largo hacia adelante y baja las caderas hasta que ambas rodillas estén dobladas a 90 grados. Empuja para volver.' },
+            { name: 'Sentadilla Dividida (Split Squat) con Peso Propio', instructions: 'Adopta una postura escalonada (un pie adelante, otro atrás). Baja y sube doblando ambas rodillas, sin mover los pies.' }
+        ],
+        'Curl de Bíceps con Mancuernas': [
+            { name: 'Curl de Bíceps Martillo con Mancuernas', instructions: 'Sostén una mancuerna en cada mano con las palmas mirándose. Levanta las mancuernas hacia los hombros.' },
+            { name: 'Curl de Bíceps Concentrado con Mancuerna', instructions: 'Sentado, apoya el codo con la mancuerna en la parte interior de tu muslo y realiza el curl.' }
+        ],
+        'Flexiones': [
+            { name: 'Flexiones con Pies Elevados (Declined Push-ups)', instructions: 'Coloca los pies sobre una superficie elevada (banco, silla) y realiza flexiones para aumentar la dificultad.' },
+            { name: 'Press de Pecho con Mancuernas en el suelo', instructions: 'Acuéstate en el suelo con una mancuerna en cada mano y realiza el press de pecho.' }
+        ],
+        'Swing con Kettlebell a una mano': [
+            { name: 'Swing con Mancuerna a una mano', instructions: 'Realiza el movimiento del swing con mancuerna utilizando una sola mancuerna en una mano.' },
+            { name: 'Arrancada con Mancuerna (Single-arm Dumbbell Snatch)', instructions: 'Levanta una mancuerna del suelo a una posición por encima de la cabeza en un movimiento fluido y explosivo.'}
+        ],
+        'Patada con Balón Medicinal': [
+            { name: 'Patada de Glúteo con Banda Elástica', instructions: 'A cuatro patas, coloca una banda elástica alrededor de un pie y extiende la pierna hacia atrás y arriba.' },
+            { name: 'Patada de Glúteo (Peso Corporal)', instructions: 'A cuatro patas, levanta una pierna hacia atrás y arriba contrayendo el glúteo.'}
+        ],
+        'Clean y Press con Barra': [
+            { name: 'Clean y Press con Mancuernas', instructions: 'Lleva las mancuernas del suelo a los hombros (clean) y luego presiónalas por encima de la cabeza (press).' },
+            { name: 'Push Press con Mancuernas', instructions: 'Sostén mancuernas a la altura de los hombros. Usa un impulso de piernas para ayudarte a presionarlas por encima de la cabeza.'}
+        ],
+        'Peso Muerto Rumano con Barra': [
+            { name: 'Peso Muerto Rumano con Mancuernas', instructions: 'Inclínate desde las caderas con la espalda recta y mancuernas por delante de las piernas. Sube apretando glúteos.' },
+            { name: 'Buenos Días (Good Mornings) con Peso Corporal', instructions: 'De pie, manos detrás de la cabeza o brazos cruzados. Inclínate hacia adelante desde las caderas con la espalda recta y vuelve a subir.'}
+        ],
+        'Sentadilla Split con Mancuernas': [
+            { name: 'Sentadilla Split con Peso Propio', instructions: 'Adopta una postura escalonada (un pie adelante, otro atrás). Baja y sube doblando ambas rodillas.' },
+            { name: 'Sentadilla Búlgara con Peso Propio', instructions: 'De pie frente a un banco, coloca el pie trasero sobre él. Baja la rodilla trasera hacia el suelo y sube, usando solo tu peso corporal.'}
+        ],
+        'Flexiones de Tríceps': [
+            { name: 'Extensiones de Tríceps con Mancuerna (Acostado)', instructions: 'Acuéstate y baja una mancuerna con ambas manos por detrás de la cabeza doblando los codos. Extiende los brazos.' },
+            { name: 'Patada de Tríceps con Mancuerna', instructions: 'Inclínate, codo pegado al cuerpo. Extiende el antebrazo hacia atrás con una mancuerna.'}
+        ],
+        'Swing Alternado con Kettlebell': [
+            { name: 'Swing Alternado con Mancuernas', instructions: 'Realiza el swing con mancuerna, cambiando de mano en la parte superior del movimiento.' },
+            { name: 'Arrancada Alternada con Mancuerna', instructions: 'Realiza la arrancada con mancuerna, alternando el brazo en cada repetición.'}
+        ],
+        'Elevación de piernas doble con Balón Medicinal': [
+            { name: 'Elevación de Piernas Doble (Peso Corporal)', instructions: 'Acuéstate boca arriba y levanta ambas piernas rectas hacia el techo, manteniendo la zona lumbar pegada al suelo.' },
+            { name: 'Elevación de Rodillas Colgado', instructions: 'Cuélgate de una barra y lleva las rodillas hacia el pecho contrayendo los abdominales.'}
         ]
     }
 };
@@ -110,7 +190,11 @@ let appState = {
     todayExercises: {},
     currentWorkoutDate: new Date().toISOString().split('T')[0],
     completedExercises: [],
-    micPermissionGranted: false // Estado del permiso
+    micPermissionGranted: false, // Estado del permiso
+    // New state property to track the original exercise being replaced by an alternative
+    trackingAlternativeFor: null,
+    // New state property to store the list of exercises for the current day's workout
+    currentDayExercises: []
 };
 
 // Elementos DOM frecuentes
@@ -146,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // Actualizar UI con datos actuales
-    updatePhaseInfo();
+    // updatePhaseInfo(); // This function is no longer needed since the phase info is removed from index.html
     // Configurar eventos de botones
     document.getElementById('btn-today').addEventListener('click', showTodayWorkout);
     document.getElementById('btn-exercises').addEventListener('click', showExercisesList);
@@ -221,6 +305,13 @@ function loadAppState() {
         const loadedState = JSON.parse(savedState);
         // Fusionar con appState para asegurar que tenemos todos los campos necesarios
         appState = { ...appState, ...loadedState };
+        // Ensure new properties exist even if loading old state
+        if (appState.trackingAlternativeFor === undefined) {
+            appState.trackingAlternativeFor = null;
+        }
+         if (appState.currentDayExercises === undefined) {
+            appState.currentDayExercises = [];
+        }
         // Asegurarse de que tenemos la fecha actual
         appState.currentWorkoutDate = new Date().toISOString().split('T')[0];
     } else {
@@ -236,7 +327,8 @@ function saveAppState() {
     localStorage.setItem('f12WorkoutState', JSON.stringify(appState));
 }
 
-// Actualizar info de fase en la UI
+// Actualizar info de fase en la UI - This function is no longer needed
+/*
 function updatePhaseInfo() {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
 
@@ -248,18 +340,35 @@ function updatePhaseInfo() {
     document.getElementById('phase-rest').textContent = `${currentPhase.rest}s`;
     document.getElementById('phase-tempo').textContent = currentPhase.tempo;
 }
+*/
 
 // Mostrar entrenamiento de hoy
 function showTodayWorkout() {
-    // Determinar qué día de la semana es hoy
+    // Clear any pending alternative tracking
+    appState.trackingAlternativeFor = null;
+    // Determine today's exercise list if not already set for the current day
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ...
-    const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajustar para que 0 = lunes
+    const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Adjust for 0 = lunes
 
     const todaySchedule = workoutProgram.weeklySchedule[adjustedDay];
     const currentPhase = workoutProgram.phases[appState.currentPhase];
 
-    // Si es día de descanso
+    if (todaySchedule.type === 'Resistencia') {
+         // Only update currentDayExercises if it's a resistance training day and it's a new day or list is empty
+        if (appState.currentDayExercises.length === 0 || appState.currentWorkoutDate !== new Date().toISOString().split('T')[0]) {
+             appState.currentDayExercises = [...currentPhase.exercises]; // Copy the exercises for today
+             appState.currentWorkoutDate = new Date().toISOString().split('T')[0]; // Update workout date
+        }
+    } else {
+         appState.currentDayExercises = []; // Clear exercise list for non-resistance days
+    }
+
+
+    saveAppState();
+
+
+    // If it's a rest day
     if (todaySchedule.type === 'Descanso') {
         mainContent.innerHTML = `
             <div class="card">
@@ -271,20 +380,26 @@ function showTodayWorkout() {
         return;
     }
 
-    // Si es día de entrenamiento de resistencia
+    // If it's a training day (Resistance or Acondicionamiento)
     if (todaySchedule.type === 'Resistencia') {
         let exercisesHTML = '';
-        currentPhase.exercises.forEach((exercise, index) => {
-            // Buscar el último registro de este ejercicio
-            const lastRecord = appState.exerciseHistory[exercise] || null;
+        appState.currentDayExercises.forEach((exercise, index) => { // Use currentDayExercises
+            // Determine the exercise name to display and check history/completion against
+            const displayExerciseName = exercise; // Display the exercise name from the list
 
-            // Comprobar si el ejercicio ya está completado hoy
-            const isCompleted = appState.completedExercises.includes(exercise);
+            // Find the last record for the original exercise or the alternative if it was used
+            const lastRecord = appState.exerciseHistory[displayExerciseName] || null;
+
+
+            // Check if the exercise (or its alternative) is completed today
+            // We need a way to map back from an alternative to the original to check completion status for the day
+            // For now, we will just check if the exercise name in the list is completed
+            const isCompleted = appState.completedExercises.includes(displayExerciseName);
 
 
             exercisesHTML += `
-                <div class="exercise-item ${isCompleted ? 'completed-exercise' : ''}" data-exercise="${exercise}">
-                    <div class="exercise-title">${index + 1}. ${exercise}</div>
+                <div class="exercise-item ${isCompleted ? 'completed-exercise' : ''}" data-exercise="${displayExerciseName}">
+                    <div class="exercise-title">${index + 1}. ${displayExerciseName}</div>
 
                     <div class="exercise-details">
                         <div class="exercise-column">
@@ -301,7 +416,7 @@ function showTodayWorkout() {
 
                         <div class="exercise-column">
                             <div class="column-title">Hoy</div>
-                            <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'} btn-track" onclick="trackExercise('${exercise}')">
+                            <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'} btn-track" onclick="trackExercise('${displayExerciseName}')">
                                 ${isCompleted ? '✓ Completado' : 'Registrar'}
                             </button>
                         </div>
@@ -322,9 +437,9 @@ function showTodayWorkout() {
             </div>
         `;
     }
-    // Si es día de acondicionamiento
+    // If it's acondicionamiento
     else if (todaySchedule.type === 'Acondicionamiento') {
-        mainContent.innerHTML = `
+         mainContent.innerHTML = `
             <div class="card">
                 <h2>Entrenamiento de ${todaySchedule.day}</h2>
                 <p>Hoy toca entrenamiento de acondicionamiento.</p>
@@ -334,6 +449,7 @@ function showTodayWorkout() {
         `;
     }
 }
+
 
 // Función para dar formato a las series
 function formatSets(sets) {
@@ -374,6 +490,10 @@ function getNextTrainingDay() {
 
 // Mostrar lista de ejercicios
 function showExercisesList() {
+     // Clear any pending alternative tracking
+    appState.trackingAlternativeFor = null;
+    saveAppState();
+
     const currentPhase = workoutProgram.phases[appState.currentPhase];
 
     let exercisesHTML = '';
@@ -398,8 +518,8 @@ function showExercisesList() {
 }
 
 // Mostrar alternativas para una máquina ocupada
-function showAlternatives(exercise) {
-    const alternatives = workoutProgram.alternatives[exercise] || [];
+function showAlternatives(originalExercise) {
+    const alternatives = workoutProgram.alternatives[originalExercise] || [];
     if (alternatives.length === 0) {
         alert('No hay alternativas disponibles para este ejercicio');
         return;
@@ -411,23 +531,43 @@ function showAlternatives(exercise) {
             <div class="exercise-item">
                 <div class="exercise-title">${alt.name}</div>
                 <p>${alt.instructions}</p>
+                <button class="btn btn-sm btn-primary" onclick="selectAlternative('${originalExercise}', '${alt.name}')">Seleccionar</button>
             </div>
         `;
     });
     mainContent.innerHTML = `
         <div class="card">
-            <h2>Alternativas para: ${exercise}</h2>
-            <p>Si la máquina está ocupada, prueba estos ejercicios:</p>
+            <h2>Alternativas para: ${originalExercise}</h2>
+            <p>Selecciona una alternativa:</p>
             <div class="alternatives-list">
                 ${alternativesHTML}
             </div>
-            <button class="btn btn-secondary" onclick="showExercisesList()">Volver a ejercicios</button>
+            <button class="btn btn-secondary" onclick="trackExercise('${originalExercise}')">Volver al ejercicio principal</button>
+             <button class="btn btn-secondary" onclick="showTodayWorkout()">Cancelar y Volver al entrenamiento</button>
         </div>
     `;
 }
 
+// Function to select an alternative and start tracking it
+function selectAlternative(originalExercise, alternativeExercise) {
+    console.log(`Selected alternative: ${alternativeExercise} for ${originalExercise}`);
+    // Set the state to remember the original exercise being replaced
+    appState.trackingAlternativeFor = originalExercise;
+    saveAppState(); // Save the state
+
+    // Navigate to the tracking screen for the selected alternative
+    trackExercise(alternativeExercise);
+}
+
+
 // Mostrar entrenamiento HIIT
 function showHIITWorkout() {
+     // Clear any pending alternative tracking
+    appState.trackingAlternativeFor = null;
+     appState.currentDayExercises = []; // Clear exercise list for non-resistance days
+    saveAppState();
+
+
     const currentPhase = workoutProgram.phases[appState.currentPhase];
     mainContent.innerHTML = `
         <div class="card">
@@ -452,6 +592,10 @@ function showHIITWorkout() {
 
 // Mostrar progreso
 function showProgress() {
+     // Clear any pending alternative tracking
+    appState.trackingAlternativeFor = null;
+    saveAppState();
+
     // Calcular semanas desde el inicio
     const startDate = new Date(appState.startDate);
     const today = new Date();
@@ -537,15 +681,29 @@ function showProgress() {
 // Función para registrar un ejercicio
 function trackExercise(exercise) {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    // Obtener datos anteriores si existen
+    // Get the list of exercises for today's workout
+    const exerciseList = appState.currentDayExercises; // Use the stored list
+    const currentExerciseIndex = exerciseList.indexOf(exercise); // Find index in today's list
+
+
+    // If the exercise is an alternative, find the original exercise to get its recommended sets/reps (optional, might just show alternative name)
+    // For simplicity, the recommended sets/reps shown will be for the *primary* exercise from the workout program,
+    // even if tracking an alternative. The "Último Registro" will show data for the specific exercise name being tracked.
+    const originalExerciseName = appState.trackingAlternativeFor || exercise; // If tracking alternative, use original, otherwise use exercise name
+
+
+    // Get previous data for the specific exercise name being tracked (could be alternative)
     const previousData = appState.exerciseHistory[exercise] || null;
-    // Si el ejercicio ya está completado, mostrar un mensaje
-    if (appState.completedExercises.includes(exercise)) {
-        const confirmReopen = confirm('Este ejercicio ya está completado hoy. ¿Quieres editarlo de nuevo?');
-        if (!confirmReopen) {
-            return;
-        }
-    }
+
+
+    // Check if the original exercise (or the exercise if not an alternative) is completed today
+    const isCompleted = appState.completedExercises.includes(originalExerciseName);
+
+
+    // Determine if 'Anterior' and 'Siguiente' buttons should be disabled based on position in today's exercise list
+    const isFirstExercise = currentExerciseIndex === 0;
+    const isLastExercise = currentExerciseIndex === exerciseList.length - 1;
+
 
     mainContent.innerHTML = `
         <div class="card">
@@ -554,7 +712,7 @@ function trackExercise(exercise) {
             <div class="exercise-columns-container">
                 <div class="exercise-column">
                     <div class="column-title">Recomendado</div>
-                    <div class="exercise-info">
+                     <div class="exercise-info">
                         <p><strong>Series:</strong> ${currentPhase.sets}</p>
                         <p><strong>Repeticiones:</strong> ${currentPhase.reps}</p>
                         <p><strong>Descanso:</strong> ${currentPhase.rest}s</p>
@@ -562,7 +720,7 @@ function trackExercise(exercise) {
                 </div>
 
                 <div class="exercise-column">
-                    <div class="column-title">Último Registro</div>
+                    <div class="column-title">Último Registro (${exercise})</div>
                     ${previousData ?
             `<div class="previous-data">
                                 <p><strong>Series:</strong> ${formatSets(previousData.sets)}</p>
@@ -572,10 +730,15 @@ function trackExercise(exercise) {
                 </div>
 
                 <div class="exercise-column">
-                     <div class="column-title">Hoy</div>
+                     <div class="column-title">Hoy (${exercise})</div>
                      <div id="sets-container" class="today-sets-container">
                         </div>
                 </div>
+            </div>
+
+             <div class="navigation-buttons">
+                <button class="btn btn-secondary" onclick="goToPreviousExercise('${exercise}')" ${isFirstExercise ? 'disabled' : ''}>Anterior</button>
+                <button class="btn btn-secondary" onclick="goToNextExercise('${exercise}')" ${isLastExercise ? 'disabled' : ''}>Siguiente</button>
             </div>
 
 
@@ -587,7 +750,7 @@ function trackExercise(exercise) {
             <div class="actions">
                 <button class="btn btn-primary" onclick="saveExercise('${exercise}')">Guardar y Continuar</button>
                 <button class="btn btn-secondary" onclick="showTodayWorkout()">Cancelar</button>
-                <button class="machine-busy-button" onclick="showAlternatives('${exercise}')">
+                 <button class="machine-busy-button" onclick="showAlternatives('${exercise}')">
                     ⚠️ Máquina Ocupada
                 </button>
             </div>
@@ -612,6 +775,41 @@ function trackExercise(exercise) {
         appState.todayExercises[exercise] = [];
     }
 }
+
+// Function to navigate to the next exercise in the current day's list
+function goToNextExercise(currentExerciseName) {
+    const exerciseList = appState.currentDayExercises; // Use the stored list for today
+    const currentIndex = exerciseList.indexOf(currentExerciseName);
+
+    if (currentIndex !== -1 && currentIndex < exerciseList.length - 1) {
+        const nextExercise = exerciseList[currentIndex + 1];
+        // When navigating, if we were tracking an alternative, clear that state
+        appState.trackingAlternativeFor = null; // Assume navigating away means done with alternative for now
+        saveAppState();
+        trackExercise(nextExercise); // Navigate to the next exercise's tracking screen
+    } else {
+        // Optional: alert or indicate that this is the last exercise
+         alert("Este es el último ejercicio de la lista de hoy.");
+    }
+}
+
+// Function to navigate to the previous exercise in the current day's list
+function goToPreviousExercise(currentExerciseName) {
+    const exerciseList = appState.currentDayExercises; // Use the stored list for today
+    const currentIndex = exerciseList.indexOf(currentExerciseName);
+
+    if (currentIndex > 0) { // Check if not the first exercise
+        const previousExercise = exerciseList[currentIndex - 1];
+         // When navigating, if we were tracking an alternative, clear that state
+        appState.trackingAlternativeFor = null; // Assume navigating away means done with alternative for now
+        saveAppState();
+        trackExercise(previousExercise); // Navigate to the previous exercise's tracking screen
+    } else {
+        // Optional: alert or indicate that this is the first exercise
+         alert("Este es el primer ejercicio de la lista de hoy.");
+    }
+}
+
 
 // Variables para el temporizador
 let timerInterval = null;
@@ -650,6 +848,11 @@ function stopTimer() {
         clearInterval(timerInterval);
         timerInterval = null;
     }
+     // Ocultar el temporizador cuando se detiene manualmente o tiempo termina
+    const timerElement = document.getElementById('rest-timer');
+    if (timerElement) {
+        timerElement.classList.add('hidden');
+    }
 }
 
 // Actualizar display del temporizador
@@ -686,7 +889,16 @@ function addSetToUI(reps, weight) {
     const setElement = document.createElement('div');
     setElement.className = 'set-item';
     // Pass exercise name and set index for removeSet function
-    const exerciseName = document.querySelector('.card h2').textContent.replace('Registrar: ', '');
+    const exerciseElement = document.querySelector('.card h2');
+    // Get the exercise name from the H2, which correctly shows the primary or alternative name being tracked
+    const exerciseName = exerciseElement ? exerciseElement.textContent.replace('Registrar: ', '') : null;
+
+
+    if (!exerciseName) {
+        console.error("Could not determine exercise name for adding set to UI.");
+        return;
+    }
+
     setElement.innerHTML = `
         <div class="set-info">
             <span class="set-number">Set ${setCount}:</span>
@@ -720,45 +932,62 @@ function removeSet(element, exercise, index) {
 }
 
 // Guardar ejercicio y pasar al siguiente
-function saveExercise(exercise) {
+function saveExercise(exercise) { // 'exercise' here is the name of the exercise currently being tracked (primary or alternative)
     const setsContainer = document.getElementById('sets-container');
     if (!setsContainer || setsContainer.children.length === 0) {
         alert('Debes añadir al menos un set');
         return;
     }
 
-    // Guardar en el historial
-    appState.exerciseHistory[exercise] = {
-        sets: appState.todayExercises[exercise],
+    // Determine which exercise name to use for saving in history and marking as completed
+    // If we were tracking an alternative, save under the alternative's name in history
+    // but mark the original exercise in the daily list as completed.
+    const exerciseToSaveHistoryUnder = exercise; // Save history under the specific name tracked (alternative or primary)
+    const exerciseToMarkCompleted = appState.trackingAlternativeFor || exercise; // Mark the original exercise in the program list as completed
+
+
+    // Save in history under the name of the exercise being tracked (could be alternative)
+    appState.exerciseHistory[exerciseToSaveHistoryUnder] = {
+        sets: appState.todayExercises[exercise], // Save the sets recorded for the exercise name currently being tracked
         date: new Date().toISOString()
     };
-    // Marcar como completado
-    if (!appState.completedExercises.includes(exercise)) {
-        appState.completedExercises.push(exercise);
+
+    // Mark the original exercise (or the tracked one if no alternative) in the daily list as completed
+    if (!appState.completedExercises.includes(exerciseToMarkCompleted)) {
+        appState.completedExercises.push(exerciseToMarkCompleted);
     }
+
+    // Clear todayExercises for the exercise that was just saved/completed
+    delete appState.todayExercises[exercise]; // Clear temporary data for the exercise name that was tracked
+
+
+    // Clear the alternative tracking state after saving
+    appState.trackingAlternativeFor = null;
+
 
     // Guardar estado
     saveAppState();
     // Mostrar mensaje de éxito (opcional, podrías quitarlo para una transición más fluida)
     // alert('Ejercicio guardado correctamente.');
 
-    // --- Lógica para pasar al siguiente ejercicio ---
-    const currentPhase = workoutProgram.phases[appState.currentPhase];
-    const currentExerciseIndex = currentPhase.exercises.indexOf(exercise);
+    // --- Lógica para pasar al siguiente exercise in the current day's list ---
+    const exerciseList = appState.currentDayExercises; // Use the stored list for today
+    // Find the index of the *original* exercise that was just completed in the daily list
+    const currentExerciseIndex = exerciseList.indexOf(exerciseToMarkCompleted);
 
-    if (currentExerciseIndex !== -1 && currentExerciseIndex < currentPhase.exercises.length - 1) {
-        // Si hay un siguiente ejercicio en la lista
-        const nextExercise = currentPhase.exercises[currentExerciseIndex + 1];
-        // Limpiar los todayExercises para el nuevo ejercicio antes de pasar a la siguiente pantalla
-        appState.todayExercises = {};
-        saveAppState(); // Guardar el estado con todayExercises limpio para el nuevo ejercicio
-        trackExercise(nextExercise); // Mostrar la pantalla del siguiente ejercicio
+
+    if (currentExerciseIndex !== -1 && currentExerciseIndex < exerciseList.length - 1) {
+        // Si hay un siguiente ejercicio en la lista de hoy
+        const nextExercise = exerciseList[currentExerciseIndex + 1];
+        // No need to clear todayExercises here, as it's cleared above for the saved exercise
+
+        trackExercise(nextExercise); // Show the screen for the next exercise in today's list
     } else {
-        // Si no hay más ejercicios en la lista actual
-        appState.todayExercises = {}; // Limpiar todayExercises al finalizar el entrenamiento del día
-        saveAppState(); // Guardar el estado con todayExercises limpio
-        showTodayWorkout(); // Volver a la pantalla de entrenamiento del día
-        alert('¡Entrenamiento completado!'); // Mensaje de fin de entrenamiento
+        // Si no hay más ejercicios en la lista de hoy
+        appState.todayExercises = {}; // Clear any remaining temporary data just in case
+        saveAppState(); // Save the state
+        showTodayWorkout(); // Return to the main daily workout view
+        alert('¡Entrenamiento completado!'); // Message for end of workout
     }
 }
 
@@ -777,12 +1006,14 @@ function confirmReset() {
             todayExercises: {},
             currentWorkoutDate: new Date().toISOString().split('T')[0],
             completedExercises: [],
-            micPermissionGranted: micPermission // Conservar el estado del permiso
+            micPermissionGranted: micPermission, // Conservar el estado del permiso
+            trackingAlternativeFor: null,
+            currentDayExercises: []
         };
         // Guardar el nuevo estado
         saveAppState();
         // Actualizar la UI
-        updatePhaseInfo();
+        // updatePhaseInfo(); // This function is no longer needed
         showTodayWorkout();
 
         alert('Programa reiniciado correctamente');
@@ -791,6 +1022,11 @@ function confirmReset() {
 
 // Iniciar temporizador HIIT
 function startHIITTimer() {
+     // Clear any pending alternative tracking
+    appState.trackingAlternativeFor = null;
+     appState.currentDayExercises = []; // Clear exercise list for non-resistance days
+    saveAppState();
+
     const workTime = 20; // segundos
     const restTime = 10; // segundos
     let currentRound = 1;
@@ -882,6 +1118,7 @@ function startHIITTimer() {
         }
     }
 }
+
 
 // Variables para reconocimiento de voz
 let recognition = null;
@@ -1050,118 +1287,15 @@ function processVoiceCommand(transcript) {
     }
 }
 
-// Añadir estilos para el diálogo de permiso
+// Add this script to handle CSS styles dynamically if needed, but better to put in styles.css
+/*
 document.head.insertAdjacentHTML('beforeend', `
 <style>
-.permission-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.permission-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 400px;
-    text-align: center;
-}
-
-/* Estilos para el contenedor de 3 columnas en la pantalla de registro */
-.exercise-columns-container {
-    display: flex;
-    justify-content: space-between; /* Distribute space between columns */
-    gap: 15px; /* Space between columns */
-    margin-bottom: 15px;
-    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
-}
-
-.exercise-columns-container .exercise-column {
-     flex: 1; /* Allow columns to grow and shrink */
-     min-width: 150px; /* Minimum width for columns before wrapping */
-     padding: 10px;
-     border: 1px solid #eee;
-     border-radius: 8px;
-     background-color: #f9f9f9;
-}
-
-.exercise-columns-container .exercise-column .column-title {
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    color: #555;
-}
-
-.exercise-info p,
-.previous-data p {
-    margin-bottom: 5px;
-}
-
-.today-sets-container {
-    max-height: 150px; /* Limit height and enable scrolling for today's sets */
-    overflow-y: auto;
-    padding-right: 5px; /* Add some padding for the scrollbar */
-}
-
-
-.completed-exercise {
-    background-color: #e8f5e9 !important;
-    border-left: 4px solid #4CAF50;
-}
-
-.history-container {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.history-entry {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.history-date {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.history-exercise-name {
-    font-weight: bold;
-}
-
-.date-info {
-    font-style: italic;
-    color: #666;
-    margin-top: 5px;
-}
-
-.voice-instructions {
-    background-color: #e8f5e9;
-    border-radius: 8px;
-    padding: 12px;
-    margin: 15px 0;
-    border-left: 4px solid #4CAF50;
-}
-
-.voice-instructions ul {
-    margin-top: 8px;
-    padding-left: 20px;
-}
-
-.voice-instructions li {
-    margin-bottom: 5px;
-}
+// Your CSS styles here
 </style>
 `);
+*/
+
 // Configuración PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
