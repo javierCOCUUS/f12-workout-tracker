@@ -120,7 +120,7 @@ const mainContent = document.getElementById('main-content');
 document.addEventListener('DOMContentLoaded', async () => {
     // Cargar datos guardados primero
     loadAppState();
-    
+
     // Configurar permiso persistente para el dominio
     if (typeof navigator.permissions !== 'undefined' && typeof navigator.permissions.query !== 'undefined') {
         try {
@@ -143,15 +143,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Si la API de permisos no está disponible, intentar el método alternativo
         await requestMicrophoneAccess();
     }
-    
+
     // Actualizar UI con datos actuales
     updatePhaseInfo();
-    
     // Configurar eventos de botones
     document.getElementById('btn-today').addEventListener('click', showTodayWorkout);
     document.getElementById('btn-exercises').addEventListener('click', showExercisesList);
     document.getElementById('btn-progress').addEventListener('click', showProgress);
-    
     // Mostrar pantalla inicial
     showTodayWorkout();
 });
@@ -161,22 +159,19 @@ async function requestMicrophoneAccess() {
     try {
         // Mostrar un diálogo de confirmación primero
         const confirmed = await showPermissionDialog();
-        
         if (confirmed) {
             // Esto iniciará un stream que debe permitirse de forma persistente
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+            const stream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
                 video: false // Especificar explícitamente
             });
-            
             // Detener el stream inmediatamente, solo necesitamos el permiso
             if (stream && stream.getTracks) {
                 stream.getTracks().forEach(track => track.stop());
-                
                 // Marcar como concedido en el estado
                 appState.micPermissionGranted = true;
                 saveAppState();
-                
+
                 return true;
             }
         }
@@ -203,12 +198,13 @@ function showPermissionDialog() {
             </div>
         `;
         document.body.appendChild(permissionDialog);
-        
+
+
         document.getElementById('grant-permission').addEventListener('click', () => {
             permissionDialog.remove();
             resolve(true);
         });
-        
+
         document.getElementById('deny-permission').addEventListener('click', () => {
             permissionDialog.remove();
             resolve(false);
@@ -223,7 +219,6 @@ function loadAppState() {
         const loadedState = JSON.parse(savedState);
         // Fusionar con appState para asegurar que tenemos todos los campos necesarios
         appState = { ...appState, ...loadedState };
-        
         // Asegurarse de que tenemos la fecha actual
         appState.currentWorkoutDate = new Date().toISOString().split('T')[0];
     } else {
@@ -242,7 +237,7 @@ function saveAppState() {
 // Actualizar info de fase en la UI
 function updatePhaseInfo() {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    
+
     document.getElementById('current-phase').textContent = currentPhase.name;
     document.getElementById('current-week').textContent = appState.currentWeek;
     document.getElementById('total-weeks').textContent = currentPhase.durationWeeks;
@@ -258,10 +253,10 @@ function showTodayWorkout() {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ...
     const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajustar para que 0 = lunes
-    
+
     const todaySchedule = workoutProgram.weeklySchedule[adjustedDay];
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    
+
     // Si es día de descanso
     if (todaySchedule.type === 'Descanso') {
         mainContent.innerHTML = `
@@ -273,35 +268,35 @@ function showTodayWorkout() {
         `;
         return;
     }
-    
+
     // Si es día de entrenamiento de resistencia
     if (todaySchedule.type === 'Resistencia') {
         let exercisesHTML = '';
-        
         currentPhase.exercises.forEach((exercise, index) => {
             // Buscar el último registro de este ejercicio
             const lastRecord = appState.exerciseHistory[exercise] || null;
-            
+
             // Comprobar si el ejercicio ya está completado hoy
             const isCompleted = appState.completedExercises.includes(exercise);
-            
+
+
             exercisesHTML += `
                 <div class="exercise-item ${isCompleted ? 'completed-exercise' : ''}" data-exercise="${exercise}">
                     <div class="exercise-title">${index + 1}. ${exercise}</div>
-                    
+
                     <div class="exercise-details">
                         <div class="exercise-column">
                             <div class="column-title">Recomendado</div>
                             <div>${currentPhase.sets} series</div>
                             <div>${currentPhase.reps} reps</div>
                         </div>
-                        
+
                         <div class="exercise-column">
                             <div class="column-title">Último</div>
                             <div>${lastRecord ? formatSets(lastRecord.sets) : 'N/A'}</div>
                             <div>${lastRecord ? formatDate(lastRecord.date) : ''}</div>
                         </div>
-                        
+
                         <div class="exercise-column">
                             <div class="column-title">Hoy</div>
                             <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'} btn-track" onclick="trackExercise('${exercise}')">
@@ -312,19 +307,19 @@ function showTodayWorkout() {
                 </div>
             `;
         });
-        
+
         mainContent.innerHTML = `
             <div class="workout-header">
                 <h2>Entrenamiento de ${todaySchedule.day}</h2>
                 <p>${todaySchedule.type}</p>
                 <p class="date-info">Fecha: ${formatDateFull(new Date())}</p>
             </div>
-            
+
             <div class="exercises-container">
                 ${exercisesHTML}
             </div>
         `;
-    } 
+    }
     // Si es día de acondicionamiento
     else if (todaySchedule.type === 'Acondicionamiento') {
         mainContent.innerHTML = `
@@ -341,14 +336,12 @@ function showTodayWorkout() {
 // Función para dar formato a las series
 function formatSets(sets) {
     if (!sets || sets.length === 0) return 'N/A';
-    
     return sets.map(set => `${set.reps}×${set.weight}kg`).join(' | ');
 }
 
 // Función para dar formato a la fecha (corta)
 function formatDate(dateString) {
     if (!dateString) return '';
-    
     const date = new Date(dateString);
     return date.toLocaleDateString();
 }
@@ -363,24 +356,24 @@ function formatDateFull(date) {
 function getNextTrainingDay() {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ...
-    
+
     // Buscar el próximo día de entrenamiento
     for (let i = 1; i <= 7; i++) {
         const nextDay = (dayOfWeek + i) % 7;
         const adjustedDay = nextDay === 0 ? 6 : nextDay - 1; // Ajustar para que 0 = lunes
-        
+
         if (workoutProgram.weeklySchedule[adjustedDay].type !== 'Descanso') {
             return workoutProgram.weeklySchedule[adjustedDay].day;
         }
     }
-    
+
     return 'Lunes'; // Por defecto
 }
 
 // Mostrar lista de ejercicios
 function showExercisesList() {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    
+
     let exercisesHTML = '';
     currentPhase.exercises.forEach((exercise, index) => {
         exercisesHTML += `
@@ -390,14 +383,13 @@ function showExercisesList() {
             </div>
         `;
     });
-    
     mainContent.innerHTML = `
         <div class="card">
             <h2>Ejercicios de la fase actual</h2>
             <div class="exercises-list">
                 ${exercisesHTML}
             </div>
-            
+
             <button class="btn btn-primary" onclick="showTodayWorkout()">Volver al entrenamiento</button>
         </div>
     `;
@@ -406,12 +398,11 @@ function showExercisesList() {
 // Mostrar alternativas para una máquina ocupada
 function showAlternatives(exercise) {
     const alternatives = workoutProgram.alternatives[exercise] || [];
-    
     if (alternatives.length === 0) {
         alert('No hay alternativas disponibles para este ejercicio');
         return;
     }
-    
+
     let alternativesHTML = '';
     alternatives.forEach(alt => {
         alternativesHTML += `
@@ -421,7 +412,6 @@ function showAlternatives(exercise) {
             </div>
         `;
     });
-    
     mainContent.innerHTML = `
         <div class="card">
             <h2>Alternativas para: ${exercise}</h2>
@@ -437,7 +427,6 @@ function showAlternatives(exercise) {
 // Mostrar entrenamiento HIIT
 function showHIITWorkout() {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    
     mainContent.innerHTML = `
         <div class="card">
             <h2>Entrenamiento HIIT</h2>
@@ -446,10 +435,11 @@ function showHIITWorkout() {
             <ul class="hiit-exercises">
                 <li>Sprints en cinta (20s trabajo, 10s descanso) x 8</li>
                 <li>Swing con Kettlebell (20s trabajo, 10s descanso) x 8</li>
-                <li>Mountain Climbers (20s trabajo, 10s descanso) x 8</li>
+                <li>Mountain climbers (20s trabajo, 10s descanso) x 8</li>
                 <li>Saltos de Sentadilla (20s trabajo, 10s descanso) x 8</li>
                 <li>Flexiones (20s trabajo, 10s descanso) x 8</li>
             </ul>
+
             <p>Descansa 2 minutos entre rondas</p>
             <p>Completa 2-3 rondas</p>
             <button class="btn btn-primary" onclick="startHIITTimer()">Iniciar Temporizador</button>
@@ -464,50 +454,46 @@ function showProgress() {
     const startDate = new Date(appState.startDate);
     const today = new Date();
     const weeksPassed = Math.floor((today - startDate) / (7 * 24 * 60 * 60 * 1000));
-    
     // Calcular progreso total del programa
     const totalWeeks = workoutProgram.phases.reduce((total, phase) => total + phase.durationWeeks, 0);
     const progressPercent = Math.min(100, Math.round((weeksPassed / totalWeeks) * 100));
-    
+
     // Preparar historial de entrenamientos
     let historyHTML = '<h3>Últimos entrenamientos</h3>';
-    
     // Crear un mapa de ejercicios y sus fechas más recientes
     const exerciseDates = {};
-    
     for (const exercise in appState.exerciseHistory) {
         const record = appState.exerciseHistory[exercise];
         const date = new Date(record.date);
-        
+
         // Agrupar por fecha
         const dateKey = date.toISOString().split('T')[0];
         if (!exerciseDates[dateKey]) {
             exerciseDates[dateKey] = [];
         }
-        
+
         exerciseDates[dateKey].push({
             name: exercise,
             sets: record.sets
         });
     }
-    
+
     // Ordenar fechas de más reciente a más antigua
     const sortedDates = Object.keys(exerciseDates).sort((a, b) => new Date(b) - new Date(a));
-    
     // Mostrar las últimas 5 fechas
     const lastDates = sortedDates.slice(0, 5);
-    
     if (lastDates.length > 0) {
         lastDates.forEach(dateKey => {
             const date = new Date(dateKey);
             historyHTML += `
                 <div class="history-entry">
                     <div class="history-date">${formatDateFull(date)}</div>
+
                     <div class="history-exercises">
                         <ul>
                             ${exerciseDates[dateKey].map(ex => `
                                 <li>
-                                    <span class="history-exercise-name">${ex.name}</span>: 
+                                    <span class="history-exercise-name">${ex.name}</span>:
                                     <span class="history-sets">${formatSets(ex.sets)}</span>
                                 </li>
                             `).join('')}
@@ -519,7 +505,7 @@ function showProgress() {
     } else {
         historyHTML += '<p>No hay entrenamientos registrados aún.</p>';
     }
-    
+
     mainContent.innerHTML = `
         <div class="card">
             <h2>Mi Progreso</h2>
@@ -527,18 +513,19 @@ function showProgress() {
             <p>Semanas completadas: ${weeksPassed}</p>
             <p>Fase actual: ${workoutProgram.phases[appState.currentPhase].name}</p>
             <p>Semana actual: ${appState.currentWeek} de ${workoutProgram.phases[appState.currentPhase].durationWeeks}</p>
-            
+
+
             <div class="progress-bar-container">
                 <div class="progress-label">Progreso total: ${progressPercent}%</div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progressPercent}%"></div>
                 </div>
             </div>
-            
+
             <div class="history-container">
                 ${historyHTML}
             </div>
-            
+
             <button class="btn btn-danger" onclick="confirmReset()">Reiniciar Programa</button>
             <button class="btn btn-primary" onclick="showTodayWorkout()">Volver al entrenamiento</button>
         </div>
@@ -548,10 +535,8 @@ function showProgress() {
 // Función para registrar un ejercicio - SOLO VOZ
 function trackExercise(exercise) {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
-    
     // Obtener datos anteriores si existen
     const previousData = appState.exerciseHistory[exercise] || null;
-    
     // Si el ejercicio ya está completado, mostrar un mensaje
     if (appState.completedExercises.includes(exercise)) {
         const confirmReopen = confirm('Este ejercicio ya está completado hoy. ¿Quieres editarlo de nuevo?');
@@ -559,28 +544,29 @@ function trackExercise(exercise) {
             return;
         }
     }
-    
+
     mainContent.innerHTML = `
         <div class="card">
             <h2>Registrar: ${exercise}</h2>
-            
+
             <div class="exercise-info">
                 <p><strong>Series recomendadas:</strong> ${currentPhase.sets}</p>
                 <p><strong>Repeticiones:</strong> ${currentPhase.reps}</p>
                 <p><strong>Descanso:</strong> ${currentPhase.rest}s</p>
             </div>
-            
-            ${previousData ? `
+
+            ${previousData ?
+        `
                 <div class="previous-data">
                     <h3>Último registro (${formatDate(previousData.date)})</h3>
                     <p><strong>Series:</strong> ${formatSets(previousData.sets)}</p>
                 </div>
             ` : ''}
-            
+
+
             <div id="sets-container">
-                <!-- Aquí se agregarán los sets dinámicamente -->
-            </div>
-            
+                </div>
+
             <div class="voice-instructions">
                 <p>Di en voz alta las repeticiones y el peso. Por ejemplo:</p>
                 <ul>
@@ -589,11 +575,12 @@ function trackExercise(exercise) {
                     <li>"10 repeticiones" (para ejercicios sin peso)</li>
                 </ul>
             </div>
-            
+
             <button id="voice-button" class="btn btn-voice" onclick="toggleVoiceRecognition()">
                 🎤 Iniciar reconocimiento de voz
             </button>
-            
+
+
             <div class="actions">
                 <button class="btn btn-primary" onclick="saveExercise('${exercise}')">Guardar y Continuar</button>
                 <button class="btn btn-secondary" onclick="showTodayWorkout()">Cancelar</button>
@@ -602,7 +589,7 @@ function trackExercise(exercise) {
                 </button>
             </div>
         </div>
-        
+
         <div id="rest-timer" class="rest-timer hidden">
             <h3>Tiempo de Descanso</h3>
             <div class="timer-display">00:${currentPhase.rest}</div>
@@ -612,7 +599,6 @@ function trackExercise(exercise) {
             </div>
         </div>
     `;
-    
     // Comprobar si hay sets guardados para este ejercicio en la sesión actual
     if (appState.todayExercises[exercise] && appState.todayExercises[exercise].length > 0) {
         appState.todayExercises[exercise].forEach(set => {
@@ -627,23 +613,21 @@ function trackExercise(exercise) {
 // Variables para el temporizador
 let timerInterval = null;
 let remainingTime = 0;
-
 // Iniciar temporizador
 function startTimer(duration) {
     stopTimer(); // Detener temporizador anterior si existe
-    
+
     // Mostrar el temporizador
     const timerElement = document.getElementById('rest-timer');
     if (timerElement) {
         timerElement.classList.remove('hidden');
     }
-    
+
     remainingTime = duration;
     updateTimerDisplay();
-    
     timerInterval = setInterval(() => {
         remainingTime--;
-        
+
         if (remainingTime <= 0) {
             stopTimer();
             // Reproducir sonido o vibración
@@ -670,7 +654,6 @@ function updateTimerDisplay() {
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
     const timerDisplay = document.querySelector('.timer-display');
-    
     if (timerDisplay) {
         timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
@@ -680,14 +663,12 @@ function updateTimerDisplay() {
 function addSet(exercise, reps, weight) {
     // Añadir a la UI
     addSetToUI(reps, weight);
-    
     // Guardar en el estado temporal
     appState.todayExercises[exercise].push({
         reps,
         weight,
         timestamp: new Date().toISOString()
     });
-    
     // Iniciar temporizador de descanso
     const currentPhase = workoutProgram.phases[appState.currentPhase];
     startTimer(currentPhase.rest);
@@ -697,9 +678,8 @@ function addSet(exercise, reps, weight) {
 function addSetToUI(reps, weight) {
     const setsContainer = document.getElementById('sets-container');
     if (!setsContainer) return;
-    
     const setCount = setsContainer.children.length + 1;
-    
+
     const setElement = document.createElement('div');
     setElement.className = 'set-item';
     setElement.innerHTML = `
@@ -709,7 +689,6 @@ function addSetToUI(reps, weight) {
         </div>
         <button class="btn-remove" onclick="removeSet(this, '${exercise}', ${setCount-1})">✕</button>
     `;
-    
     setsContainer.appendChild(setElement);
 }
 
@@ -717,12 +696,11 @@ function addSetToUI(reps, weight) {
 function removeSet(element, exercise, index) {
     // Eliminar de la UI
     element.parentElement.remove();
-    
     // Eliminar del estado
     if (appState.todayExercises[exercise] && appState.todayExercises[exercise].length > index) {
         appState.todayExercises[exercise].splice(index, 1);
     }
-    
+
     // Renumerar los sets restantes en la UI
     const setsContainer = document.getElementById('sets-container');
     if (setsContainer) {
@@ -739,29 +717,25 @@ function removeSet(element, exercise, index) {
 // Guardar ejercicio y pasar al siguiente
 function saveExercise(exercise) {
     const setsContainer = document.getElementById('sets-container');
-    
     if (!setsContainer || setsContainer.children.length === 0) {
         alert('Debes añadir al menos un set');
         return;
     }
-    
+
     // Guardar en el historial
     appState.exerciseHistory[exercise] = {
         sets: appState.todayExercises[exercise],
         date: new Date().toISOString()
     };
-    
     // Marcar como completado
     if (!appState.completedExercises.includes(exercise)) {
         appState.completedExercises.push(exercise);
     }
-    
+
     // Guardar estado
     saveAppState();
-    
     // Volver a la pantalla de entrenamiento
     showTodayWorkout();
-    
     // Mostrar mensaje de éxito
     alert('Ejercicio guardado correctamente. ¡Buen trabajo!');
 }
@@ -771,7 +745,6 @@ function confirmReset() {
     if (confirm('¿Estás seguro de que quieres reiniciar todo el programa? Se perderán todos tus datos de progreso.')) {
         // Mantener el permiso de micrófono
         const micPermission = appState.micPermissionGranted;
-        
         // Reiniciar el estado de la aplicación
         appState = {
             currentPhase: 0,
@@ -783,14 +756,12 @@ function confirmReset() {
             completedExercises: [],
             micPermissionGranted: micPermission // Conservar el estado del permiso
         };
-        
         // Guardar el nuevo estado
         saveAppState();
-        
         // Actualizar la UI
         updatePhaseInfo();
         showTodayWorkout();
-        
+
         alert('Programa reiniciado correctamente');
     }
 }
@@ -802,7 +773,7 @@ function startHIITTimer() {
     let currentRound = 1;
     const totalRounds = 8;
     let isWorkPeriod = true;
-    
+
     mainContent.innerHTML = `
         <div class="card hiit-timer">
             <h2>Temporizador HIIT</h2>
@@ -813,19 +784,17 @@ function startHIITTimer() {
             <button id="btn-stop-hiit" class="btn btn-danger" onclick="showHIITWorkout()">Detener</button>
         </div>
     `;
-    
     // Cuenta regresiva inicial de 3 segundos
     let countdown = 3;
     const statusElement = document.getElementById('hiit-status');
     const timerElement = document.getElementById('hiit-timer');
     const roundElement = document.getElementById('hiit-round');
     const phaseElement = document.getElementById('hiit-phase');
-    
+
     statusElement.textContent = `Comenzando en: ${countdown}`;
-    
     const countdownInterval = setInterval(() => {
         countdown--;
-        
+
         if (countdown <= 0) {
             clearInterval(countdownInterval);
             statusElement.textContent = '¡Comienza!';
@@ -834,59 +803,55 @@ function startHIITTimer() {
             statusElement.textContent = `Comenzando en: ${countdown}`;
         }
     }, 1000);
-    
     function startHIITRounds() {
         let timeLeft = workTime;
         updateTimerUI();
-        
         timerInterval = setInterval(() => {
             timeLeft--;
-            
+
             if (timeLeft <= 0) {
                 // Cambiar entre trabajo y descanso
                 isWorkPeriod = !isWorkPeriod;
-                
+
                 // Si termina un período de descanso, avanzar a la siguiente ronda
                 if (isWorkPeriod) {
                     currentRound++;
                     roundElement.textContent = `Ronda: ${currentRound} / ${totalRounds}`;
                 }
-                
+
                 // Si completamos todas las rondas, terminar
                 if (currentRound > totalRounds) {
                     clearInterval(timerInterval);
                     statusElement.textContent = '¡Completado!';
                     timerElement.textContent = '00:00';
                     phaseElement.textContent = 'Descanso';
-                    
+
                     setTimeout(() => {
                         alert('¡Has completado tu entrenamiento HIIT!');
                         showHIITWorkout();
                     }, 1000);
-                    
+
                     return;
                 }
-                
+
                 // Configurar tiempo para el siguiente período
                 timeLeft = isWorkPeriod ? workTime : restTime;
                 phaseElement.textContent = isWorkPeriod ? 'Trabajo' : 'Descanso';
-                
                 // Sonido o vibración aquí
                 if ('vibrate' in navigator) {
                     navigator.vibrate([200, 100, 200]);
                 }
-                
+
                 if (isWorkPeriod) {
                     statusElement.textContent = '¡Trabaja!';
                 } else {
                     statusElement.textContent = '¡Descansa!';
                 }
             }
-            
+
             updateTimerUI();
-            
         }, 1000);
-        
+
         function updateTimerUI() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -898,50 +863,46 @@ function startHIITTimer() {
 // Variables para reconocimiento de voz
 let recognition = null;
 let isListening = false;
-
 // Inicializar reconocimiento de voz
 function initSpeechRecognition() {
     // Verificar si ya existe una instancia
     if (recognition) return true;
-    
     // Comprobar si el navegador soporta reconocimiento de voz
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         alert('Tu navegador no soporta reconocimiento de voz. Intenta con Chrome o Edge.');
         return false;
     }
-    
+
     // Crear objeto de reconocimiento
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognition = new SpeechRecognition();
-    
+
     // Configurar para español y resultados continuos
     recognition.lang = 'es-ES';
     recognition.continuous = false;
     recognition.interimResults = false;
-    
+
     // Evento al detectar resultados
     recognition.onresult = function(event) {
         const transcript = event.results[0][0].transcript.toLowerCase();
         console.log('Reconocido:', transcript);
-        
+
         // Mostrar feedback visual
         showVoiceFeedback(transcript);
-        
         // Procesar el texto reconocido
         processVoiceCommand(transcript);
     };
-    
     // Manejo de errores
     recognition.onerror = function(event) {
         console.error('Error de reconocimiento:', event.error);
         stopListening();
     };
-    
+
     // Evento al finalizar
     recognition.onend = function() {
         stopListening();
     };
-    
+
     return true;
 }
 
@@ -951,7 +912,7 @@ function startListening() {
     if (!recognition && !initSpeechRecognition()) {
         return;
     }
-    
+
     try {
         // Si no tenemos permiso guardado, solicitarlo primero
         if (!appState.micPermissionGranted) {
@@ -962,10 +923,10 @@ function startListening() {
             });
             return;
         }
-        
+
         recognition.start();
         isListening = true;
-        
+
         // Actualizar UI para mostrar que está escuchando
         const voiceButton = document.getElementById('voice-button');
         if (voiceButton) {
@@ -980,15 +941,13 @@ function startListening() {
 // Detener escucha
 function stopListening() {
     if (!recognition) return;
-    
     try {
         recognition.stop();
     } catch (error) {
         console.error('Error al detener reconocimiento:', error);
     }
-    
+
     isListening = false;
-    
     // Actualizar UI
     const voiceButton = document.getElementById('voice-button');
     if (voiceButton) {
@@ -1012,10 +971,9 @@ function showVoiceFeedback(text) {
     const feedback = document.createElement('div');
     feedback.className = 'voice-feedback';
     feedback.textContent = text;
-    
+
     // Añadir a la página
     document.body.appendChild(feedback);
-    
     // Eliminar después de la animación
     setTimeout(() => {
         feedback.remove();
@@ -1026,40 +984,38 @@ function showVoiceFeedback(text) {
 function processVoiceCommand(transcript) {
     // Buscar números en el texto
     const numbers = transcript.match(/\d+/g);
-    
     if (!numbers || numbers.length === 0) {
         alert('No se detectaron números. Intenta de nuevo.');
         return;
     }
-    
+
     let reps = null;
     let weight = null;
-    
     // Primera estrategia: buscar patrones específicos
     if (transcript.includes('repeticiones') || transcript.includes('reps')) {
         // Buscar número antes de "repeticiones" o "reps"
         const repsMatch = transcript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
         if (repsMatch) reps = repsMatch[1];
-        
+
         // Buscar número antes de "kilos" o "kg"
         const weightMatch = transcript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
         if (weightMatch) weight = weightMatch[1];
-    } 
-    
+    }
+
     // Segunda estrategia: asumir primer número es repeticiones, segundo es peso
     if (!reps && numbers.length >= 1) {
         reps = numbers[0];
     }
-    
+
     if (!weight && numbers.length >= 2) {
         weight = numbers[1];
     }
-    
+
     // Si no se especificó un peso, usar 0
     if (!weight) {
         weight = '0';
     }
-    
+
     // Si tenemos al menos repeticiones, añadir el set
     if (reps) {
         // Recuperar el ejercicio actual de algún atributo data en la UI
@@ -1146,7 +1102,6 @@ document.head.insertAdjacentHTML('beforeend', `
 }
 </style>
 `);
-
 // Configuración PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

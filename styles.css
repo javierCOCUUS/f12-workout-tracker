@@ -318,11 +318,11 @@ h3 {
     .input-row {
         flex-direction: column;
     }
-    
+
     .input-field {
         margin-bottom: 10px;
     }
-    
+
     .timer-display {
         font-size: 2rem;
     }
