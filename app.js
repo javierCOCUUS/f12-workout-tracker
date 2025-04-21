@@ -116,7 +116,7 @@ const workoutProgram = {
         ],
         'Clean con Barra': [
             { name: 'High Pull con Mancuernas', instructions: 'Sostén una mancuerna en cada mano. Inclínate ligeramente desde las caderas y rodillas. Levanta explosivamente las mancuernas hacia arriba, llevando los codos en alto.' },
-            { name: 'Sentadilla con Salto (Peso Corporal)', instructions: 'Realiza una sentadilla normal y luego salta explosivamente hacia arriba. Aterriza suavemente de vuelta en una sentadilla.' }
+            { name: 'Sentadilla con Salto (Peso Corporal)', instructions: 'Realiza una sentadilla normal y luego salta explosivamente hacia arriba. Aterriza suavemente de vuelta en una sentadilla.'}
         ],
         'Sentadilla Frontal con Barra': [
             { name: 'Sentadilla con Mancuernas (Goblet Squat)', instructions: 'Sujeta una mancuerna verticalmente contra tu pecho. Realiza una sentadilla bajando las caderas hacia el suelo, manteniendo la espalda recta y el torso erguido.' },
@@ -683,7 +683,11 @@ function trackExercise(exercise) {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
     // Get the list of exercises for today's workout
     const exerciseList = appState.currentDayExercises; // Use the stored list
-    const currentExerciseIndex = exerciseList.indexOf(exercise); // Find index in today's list
+     // Determine the name of the exercise we're tracking to find its index in the daily list
+    const exerciseNameToFindIndex = appState.trackingAlternativeFor || exercise; // If tracking alternative, use original name for index
+
+
+    const currentExerciseIndex = exerciseList.indexOf(exerciseNameToFindIndex); // Find index in today's list
 
 
     // If the exercise is an alternative, find the original exercise to get its recommended sets/reps (optional, might just show alternative name)
@@ -779,7 +783,12 @@ function trackExercise(exercise) {
 // Function to navigate to the next exercise in the current day's list
 function goToNextExercise(currentExerciseName) {
     const exerciseList = appState.currentDayExercises; // Use the stored list for today
-    const currentIndex = exerciseList.indexOf(currentExerciseName);
+     // Determine the name of the exercise we're tracking to find its index in the daily list
+    const exerciseNameToFindIndex = appState.trackingAlternativeFor || currentExerciseName; // If tracking alternative, use original name for index
+
+
+    const currentIndex = exerciseList.indexOf(exerciseNameToFindIndex); // Find index in today's list
+
 
     if (currentIndex !== -1 && currentIndex < exerciseList.length - 1) {
         const nextExercise = exerciseList[currentIndex + 1];
@@ -796,7 +805,12 @@ function goToNextExercise(currentExerciseName) {
 // Function to navigate to the previous exercise in the current day's list
 function goToPreviousExercise(currentExerciseName) {
     const exerciseList = appState.currentDayExercises; // Use the stored list for today
-    const currentIndex = exerciseList.indexOf(currentExerciseName);
+     // Determine the name of the exercise we're tracking to find its index in the daily list
+    const exerciseNameToFindIndex = appState.trackingAlternativeFor || currentExerciseName; // If tracking alternative, use original name for index
+
+
+    const currentIndex = exerciseList.indexOf(exerciseNameToFindIndex); // Find index in today's list
+
 
     if (currentIndex > 0) { // Check if not the first exercise
         const previousExercise = exerciseList[currentIndex - 1];
@@ -1240,50 +1254,58 @@ function showVoiceFeedback(text) {
     }, 3000);
 }
 
-// Procesar comando de voz
+// Procesar comando de voz - IMPROVED NUMBER DETECTION
 function processVoiceCommand(transcript) {
-    // Buscar números en el texto
-    const numbers = transcript.match(/\d+/g);
-    if (!numbers || numbers.length === 0) {
-        alert('No se detectaron números. Intenta de nuevo.');
-        return;
-    }
+    const numbers = transcript.match(/\d+/g); // Attempt to find ALL numbers
 
     let reps = null;
     let weight = null;
-    // Primera estrategia: buscar patrones específicos
-    if (transcript.includes('repeticiones') || transcript.includes('reps')) {
-        // Buscar número antes de "repeticiones" o "reps"
-        const repsMatch = transcript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
-        if (repsMatch) reps = repsMatch[1];
 
-        // Buscar número antes de "kilos" o "kg"
-        const weightMatch = transcript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
-        if (weightMatch) weight = weightMatch[1];
-    }
+    if (numbers && numbers.length > 0) { // Check IF any numbers were found
+        // Now apply the assignment logic based on the found numbers
 
-    // Segunda estrategia: asumir primer número es repeticiones, segundo es peso
-    if (!reps && numbers.length >= 1) {
-        reps = numbers[0];
-    }
+        // First strategy: look for specific patterns (keep this as it's more precise)
+        if (transcript.includes('repeticiones') || transcript.includes('reps')) {
+            const repsMatch = transcript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
+            if (repsMatch) reps = repsMatch[1]; // Get the number before 'repeticiones'/'reps'
 
-    if (!weight && numbers.length >= 2) {
-        weight = numbers[1];
-    }
-
-    // Si no se especificó un peso, usar 0
-    if (!weight) {
-        weight = '0';
-    }
-
-    // Si tenemos al menos repeticiones, añadir el set
-    if (reps) {
-        // Recuperar el ejercicio actual de algún atributo data en la UI
-        const exerciseElement = document.querySelector('.card h2');
-        if (exerciseElement) {
-            const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
-            addSet(exerciseName, reps, weight);
+            const weightMatch = transcript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
+             if (weightMatch) weight = weightMatch[1]; // Get the number before 'kilos'/'kg'
         }
+
+        // Second strategy: if reps not found by pattern, assume the first number is reps
+        if (!reps && numbers.length >= 1) {
+            reps = numbers[0];
+        }
+        // Third strategy: if weight not found by pattern and there's a second number, assume it's weight
+        if (!weight && numbers.length >= 2) {
+            weight = numbers[1];
+        }
+
+        // If weight is still null (either no second number or not detected by pattern), use 0
+        if (!weight) {
+            weight = '0';
+        }
+
+        // If we successfully determined repetitions (which should happen if numbers were found), add the set
+        if (reps) {
+            const exerciseElement = document.querySelector('.card h2');
+            if (exerciseElement) {
+                const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
+                // Ensure reps and weight are treated as numbers for logging, but they come in as strings
+                 console.log(`Detected Reps: ${reps}, Detected Weight: ${weight}`);
+                addSet(exerciseName, parseInt(reps, 10), parseInt(weight, 10)); // Convert to numbers
+            }
+        } else {
+             // This case should ideally not be hit if numbers were found and assigned to reps,
+             // but as a fallback for unexpected transcription patterns
+             console.warn("Numbers found but could not determine valid repetitions:", transcript, numbers);
+             alert('No se pudo determinar repeticiones válidas a partir de la transcripción. Intenta de nuevo.');
+        }
+
+    } else {
+        // If no numbers were found at all in the transcript
+        alert('No se detectaron números. Intenta de nuevo.');
     }
 }
 
