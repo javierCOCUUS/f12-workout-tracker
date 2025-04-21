@@ -99,34 +99,18 @@ h3 {
     border-left: 4px solid #007bff;
 }
 
-.phase-details {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-}
-
-/* Ejercicios en la lista diaria */
-.exercise-item {
-    background-color: white;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.exercise-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
+/* Exercise details container (for daily list items) */
 .exercise-details {
-    display: flex;
+    display: flex; /* Make the details section a flex container */
     justify-content: space-between;
     margin-top: 10px;
+    flex-wrap: wrap; /* Allow columns within exercise-details to wrap if needed */
+    gap: 10px; /* Space between detail columns */
 }
 
+
 .exercise-column {
-    flex: 1;
+    flex: 1; /* Each column takes up equal space */
     padding: 5px;
 }
 
@@ -318,7 +302,7 @@ h3 {
 }
 
 /* Ajustes para compatibilidad en móviles */
-@media (max-width: 500px) {
+@media (max-width: 600px) { /* Keep the breakpoint, but remove vertical stacking for columns */
     .input-row {
         flex-direction: column;
     }
@@ -331,13 +315,7 @@ h3 {
         font-size: 2rem;
     }
 
-     .exercise-details {
-        flex-direction: column;
-     }
-
-     .exercise-details .exercise-column {
-         margin-bottom: 10px;
-     }
+     /* Removed flex-direction: column for .exercise-details and .exercise-columns-container in this media query */
 
      .nav-buttons {
          flex-direction: column;
@@ -349,134 +327,18 @@ h3 {
      }
 }
 
-/* Feedback visual para comandos de voz detectados */
-.voice-feedback {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    z-index: 1000;
-    animation: fadeInOut 3s forwards;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-/* Diálogo de permiso */
-.permission-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.permission-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 400px;
-    text-align: center;
-}
-
-/* Ejercicios completados */
-.completed-exercise {
-    background-color: #e8f5e9 !important;
-    border-left: 4px solid #4CAF50;
-}
-
-/* Historial */
-.history-container {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.history-entry {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.history-date {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.history-exercise-name {
-    font-weight: bold;
-}
-
-.date-info {
-    font-style: italic;
-    color: #666;
-    margin-top: 5px;
-}
-
-/* Datos previos */
-.previous-data {
-    background-color: #f0f8ff;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    border-left: 3px solid #007bff;
-}
-
-/* Botones pequeños */
-.btn-sm {
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-/* Contenedor de sets (sets recorded today) */
-#sets-container {
-    margin: 15px 0;
-    max-height: 200px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-/* Actions buttons container */
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.actions .btn {
-    flex: 1;
-    min-width: 120px;
-}
-
-/* === Styles for the three-column layout on the Registration screen === */
+/* Keep the .exercise-columns-container flex properties universally */
 .exercise-columns-container {
     display: flex; /* Arrange children (columns) in a row */
     justify-content: space-between; /* Distribute space between columns */
     gap: 15px; /* Add some space between the columns */
     margin-bottom: 15px;
-    flex-wrap: wrap; /* Allow columns to wrap to the next line on smaller screens */
+    flex-wrap: wrap; /* Allow columns to wrap to the next line on smaller screens - this helps with horizontal layout on narrow screens */
 }
 
 .exercise-columns-container .exercise-column {
      flex: 1; /* Each column takes up equal space */
-     min-width: 150px; /* Prevent columns from becoming too narrow before wrapping */
+     min-width: 100px; /* Adjust min-width slightly to allow more shrinking if needed */
      padding: 10px;
      border: 1px solid #eee; /* Add a border for visual separation */
      border-radius: 8px;
@@ -484,17 +346,14 @@ h3 {
      /* Add text-align or other styles as needed */
 }
 
-/* Optional: Adjust for smaller screens for the 3 columns */
-@media (max-width: 600px) {
-    .exercise-columns-container {
-        flex-direction: column; /* Stack columns vertically on small screens */
-    }
-
-    .exercise-columns-container .exercise-column {
-        min-width: 100%; /* Make columns take full width when stacked */
-        margin-bottom: 10px; /* Add space between stacked columns */
-    }
+/* Adjust .exercise-column within .exercise-details if needed, but the general .exercise-column styles should apply */
+.exercise-details .exercise-column {
+    flex: 1; /* Ensure columns take equal space */
+    min-width: 80px; /* Adjust min-width for potentially narrower columns here */
+    /* Remove margin-bottom from here if adding gap to .exercise-details */
+    margin-bottom: 0; /* Remove margin-bottom when using gap */
 }
+
 
 /* Style for the list of sets within the 'Hoy' column in the registration screen */
 #sets-container.today-sets-container {

@@ -849,11 +849,26 @@ function startTimer(duration) {
             if ('vibrate' in navigator) {
                 navigator.vibrate([200, 100, 200]);
             }
-            alert('¡Tiempo de descanso finalizado!');
+            // REMOVE the alert:
+            // alert('¡Tiempo de descanso finalizado!');
+
+            // ADD audio playback:
+            playTimerSound();
+
         } else {
             updateTimerDisplay();
         }
     }, 1000);
+}
+
+// Function to play the timer sound
+function playTimerSound() {
+    const audio = new Audio('timer-sound.mp3'); // Assuming the file is named timer-sound.mp3
+    audio.play().catch(error => {
+        console.error('Error playing timer sound:', error);
+        // Fallback to alert if sound playback fails (e.g., file not found, playback error, user gesture policy)
+        alert('¡Tiempo de descanso finalizado!');
+    });
 }
 
 // Detener temporizador
@@ -1368,6 +1383,21 @@ function processVoiceCommand(transcript) {
         alert('No se detectaron números. Intenta de nuevo.');
     }
 }
+
+// Function to play the timer sound
+function playTimerSound() {
+    // Create an audio element
+    const audio = new Audio('timer-sound.mp3'); // Assuming the file is named timer-sound.mp3
+
+    // Attempt to play the sound
+    audio.play().catch(error => {
+        console.error('Error playing timer sound:', error);
+        // Fallback to alert if sound playback fails (e.g., file not found, playback error due to user gesture policy, etc.)
+        // Note: Autoplay without user interaction might be blocked by browsers.
+        alert('¡Tiempo de descanso finalizado!');
+    });
+}
+
 
 // Add this script to handle CSS styles dynamically if needed, but better to put in styles.css
 /*
