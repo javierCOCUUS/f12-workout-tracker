@@ -649,7 +649,7 @@ function showProgress() {
             `;
         });
     } else {
-        historyHTML += '<p>No hay entrenamientos registrados aún.</p>';
+        historyHTML += '<p>No hay registros anteriores.</p>';
     }
 
     mainContent.innerHTML = `
@@ -1001,7 +1001,7 @@ function saveExercise(exercise) { // 'exercise' here is the name of the exercise
         appState.todayExercises = {}; // Clear any remaining temporary data just in case
         saveAppState(); // Save the state
         showTodayWorkout(); // Return to the main daily workout view
-        alert('¡Entrenamiento completado!'); // Message for end of workout
+        alert('¡Entrenamiento completado!'); // Message for end of training
     }
 }
 
@@ -1254,35 +1254,93 @@ function showVoiceFeedback(text) {
     }, 3000);
 }
 
-// Procesar comando de voz - IMPROVED NUMBER DETECTION
+// Mapeo de palabras numéricas a dígitos (en español)
+const numberWordMap = {
+    'un': '1', 'uno': '1',
+    'dos': '2',
+    'tres': '3',
+    'cuatro': '4',
+    'cinco': '5',
+    'seis': '6',
+    'siete': '7',
+    'ocho': '8',
+    'nueve': '9',
+    'diez': '10',
+    'once': '11',
+    'doce': '12',
+    'trece': '13',
+    'catorce': '14',
+    'quince': '15',
+    'dieciséis': '16', 'dieciseis': '16',
+    'diecisiete': '17', 'diecisiete': '17',
+    'dieciocho': '18', 'dieciocho': '18',
+    'diecinueve': '19', 'diecinueve': '19',
+    'veinte': '20',
+    'treinta': '30',
+    'cuarenta': '40',
+    'cincuenta': '50',
+    'sesenta': '60',
+    'setenta': '70',
+    'ochenta': '80',
+    'noventa': '90',
+    'cien': '100', 'ciento': '100',
+    // Puedes añadir más si es necesario, como "veintiuno", "treinta y cinco", etc.
+    // Para simplificar, nos enfocamos en palabras comunes que se transcriben como una sola palabra.
+    'veintiuno': '21',
+    'veintidós': '22', 'veintidos': '22',
+    'veintitrés': '23', 'veintitres': '23',
+    'veinticuatro': '24',
+    'veinticinco': '25',
+    'veintiséis': '26', 'veintiseis': '26',
+    'veintisiete': '27', 'veintisiete': '27',
+    'veintiocho': '28', 'veintiocho': '28',
+    'veintinueve': '29', 'veintinueve': '29'
+};
+
+
+// Procesar comando de voz - IMPROVED NUMBER AND NUMBER WORD DETECTION
 function processVoiceCommand(transcript) {
-    const numbers = transcript.match(/\d+/g); // Attempt to find ALL numbers
+    // Convert number words to digits in the transcript
+    let processedTranscript = transcript;
+    for (const word in numberWordMap) {
+        const digit = numberWordMap[word];
+        // Use a regex with word boundaries to avoid replacing parts of other words
+        const regex = new RegExp(`\\b${word}\\b`, 'gi');
+        processedTranscript = processedTranscript.replace(regex, digit);
+    }
+
+     console.log('Transcripción procesada (palabras a dígitos):', processedTranscript);
+
+
+    // Now find all digits in the processed transcript
+    const numbers = processedTranscript.match(/\d+/g);
 
     let reps = null;
     let weight = null;
 
-    if (numbers && numbers.length > 0) { // Check IF any numbers were found
-        // Now apply the assignment logic based on the found numbers
-
+    if (numbers && numbers.length > 0) { // Check IF any numbers (digits now) were found
         // First strategy: look for specific patterns (keep this as it's more precise)
-        if (transcript.includes('repeticiones') || transcript.includes('reps')) {
-            const repsMatch = transcript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
-            if (repsMatch) reps = repsMatch[1]; // Get the number before 'repeticiones'/'reps'
+        // Use processedTranscript for pattern matching
+        if (processedTranscript.includes('repeticiones') || processedTranscript.includes('reps')) {
+            // Look for a number followed by optional space and then 'repeticiones' or 'reps'
+            const repsMatch = processedTranscript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
+            if (repsMatch) reps = repsMatch[1]; // Get the captured number (digit string)
 
-            const weightMatch = transcript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
-             if (weightMatch) weight = weightMatch[1]; // Get the number before 'kilos'/'kg'
+            // Look for a number followed by optional space and then 'kilos' or 'kg'
+            const weightMatch = processedTranscript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
+            if (weightMatch) weight = weightMatch[1]; // Get the captured number (digit string)
         }
 
         // Second strategy: if reps not found by pattern, assume the first number is reps
         if (!reps && numbers.length >= 1) {
-            reps = numbers[0];
+            reps = numbers[0]; // Use the first detected digit string
         }
         // Third strategy: if weight not found by pattern and there's a second number, assume it's weight
         if (!weight && numbers.length >= 2) {
-            weight = numbers[1];
+            weight = numbers[1]; // Use the second detected digit string
         }
 
-        // If weight is still null (either no second number or not detected by pattern), use 0
+        // If weight is still null (either no second number or not detected by pattern/position), use 0
         if (!weight) {
             weight = '0';
         }
@@ -1292,19 +1350,21 @@ function processVoiceCommand(transcript) {
             const exerciseElement = document.querySelector('.card h2');
             if (exerciseElement) {
                 const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
-                // Ensure reps and weight are treated as numbers for logging, but they come in as strings
-                 console.log(`Detected Reps: ${reps}, Detected Weight: ${weight}`);
+                // Convert the extracted string numbers to actual numbers before passing to addSet
+                 console.log(`Detected Reps: ${reps} (string), Detected Weight: ${weight} (string)`);
+                 console.log(`Adding Set - Reps: ${parseInt(reps, 10)}, Weight: ${parseInt(weight, 10)}`);
                 addSet(exerciseName, parseInt(reps, 10), parseInt(weight, 10)); // Convert to numbers
             }
         } else {
              // This case should ideally not be hit if numbers were found and assigned to reps,
-             // but as a fallback for unexpected transcription patterns
-             console.warn("Numbers found but could not determine valid repetitions:", transcript, numbers);
+             // but as a fallback for unexpected transcription patterns even after word conversion.
+             console.warn("Numbers/words found but could not determine valid repetitions:", transcript, numbers);
              alert('No se pudo determinar repeticiones válidas a partir de la transcripción. Intenta de nuevo.');
         }
 
     } else {
-        // If no numbers were found at all in the transcript
+        // If no numbers (digits after conversion) were found at all in the transcript
+        console.warn("No numbers or number words detected in transcript:", transcript);
         alert('No se detectaron números. Intenta de nuevo.');
     }
 }
