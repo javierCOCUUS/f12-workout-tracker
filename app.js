@@ -175,7 +175,7 @@ const workoutProgram = {
             { name: 'Arrancada Alternada con Mancuerna', instructions: 'Realiza la arrancada con mancuerna, alternando el brazo en cada repetición.'}
         ],
         'Elevación de piernas doble con Balón Medicinal': [
-            { name: 'Elevación de Piernas Doble (Peso Corporal)', instructions: 'Acuéstate boca arriba y levanta ambas piernas rectas hacia el techo, manteniendo la zona lumbar pegada al suelo.' },
+            { name: 'Elevación de Piernas Doble (Peso Corporal)', instructions: 'Acuéstate boca arriba y levanta ambas piernas rectas hacia el techo, manteniendo la zona lumbar pegada al suelo. Bájalas lentamente.' },
             { name: 'Elevación de Rodillas Colgado', instructions: 'Cuélgate de una barra y lleva las rodillas hacia el pecho contrayendo los abdominales.'}
         ]
     }
@@ -398,23 +398,25 @@ function showTodayWorkout() {
 
 
             exercisesHTML += `
-                <div class="exercise-item <span class="math-inline">\{isCompleted ? 'completed\-exercise' \: ''\}" data\-exercise\="</span>{displayExerciseName}">
-                    <div class="exercise-title">${index + 1}. <span class="math-inline">\{displayExerciseName\}</div\>
-<div class\="exercise\-details"\>
-<div class\="exercise\-column"\>
-<div class\="column\-title"\>Recomendado</div\>
-<div\></span>{currentPhase.sets} series</div>
-                            <div><span class="math-inline">\{currentPhase\.reps\} reps</div\>
-</div\>
-<div class\="exercise\-column"\>
-<div class\="column\-title"\>Último</div\>
-<div\></span>{lastRecord ? formatSets(lastRecord.sets) : 'N/A'}</div>
+                <div class="exercise-item ${isCompleted ? 'completed-exercise' : ''}" data-exercise="${displayExerciseName}">
+                    <div class="exercise-title">${index + 1}. ${displayExerciseName}</div>
+
+                    <div class="exercise-details">
+                        <div class="exercise-column">
+                            <div class="column-title">Recomendado</div>
+                            <div>${currentPhase.sets} series</div>
+                            <div>${currentPhase.reps} reps</div>
+                        </div>
+
+                        <div class="exercise-column">
+                            <div class="column-title">Último</div>
+                            <div>${lastRecord ? formatSets(lastRecord.sets) : 'N/A'}</div>
                             <div>${lastRecord ? formatDate(lastRecord.date) : ''}</div>
                         </div>
 
                         <div class="exercise-column">
                             <div class="column-title">Hoy</div>
-                            <button class="btn <span class="math-inline">\{isCompleted ? 'btn\-success' \: 'btn\-primary'\} btn\-track" onclick\="trackExercise\('</span>{displayExerciseName}')">
+                            <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'} btn-track" onclick="trackExercise('${displayExerciseName}')">
                                 ${isCompleted ? '✓ Completado' : 'Registrar'}
                             </button>
                         </div>
@@ -425,8 +427,8 @@ function showTodayWorkout() {
 
         mainContent.innerHTML = `
             <div class="workout-header">
-                <h2>Entrenamiento de <span class="math-inline">\{todaySchedule\.day\}</h2\>
-<p\></span>{todaySchedule.type}</p>
+                <h2>Entrenamiento de ${todaySchedule.day}</h2>
+                <p>${todaySchedule.type}</p>
                 <p class="date-info">Fecha: ${formatDateFull(new Date())}</p>
             </div>
 
@@ -453,7 +455,7 @@ function showTodayWorkout() {
 function formatSets(sets) {
     if (!sets || sets.length === 0) return 'N/A';
     // Compact format: Reps x Weight kg | Reps x Weight kg | ...
-    return sets.map(set => `<span class="math-inline">\{set\.reps\}x</span>{set.weight}kg`).join(' | ');
+    return sets.map(set => `${set.reps}x${set.weight}kg`).join(' | ');
 }
 
 // Función para dar formato a la fecha (corta)
@@ -473,6 +475,7 @@ function formatDateFull(date) {
 function getNextTrainingDay() {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ...
+    const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajustar para que 0 = lunes
 
     // Buscar el próximo día de entrenamiento
     for (let i = 1; i <= 7; i++) {
@@ -499,8 +502,8 @@ function showExercisesList() {
     currentPhase.exercises.forEach((exercise, index) => {
         exercisesHTML += `
             <div class="exercise-item">
-                <div class="exercise-title">${index + 1}. <span class="math-inline">\{exercise\}</div\>
-<button class\="btn btn\-secondary btn\-sm" onclick\="showAlternatives\('</span>{exercise}')">Ver alternativas</button>
+                <div class="exercise-title">${index + 1}. ${exercise}</div>
+                <button class="btn btn-secondary btn-sm" onclick="showAlternatives('${exercise}')">Ver alternativas</button>
             </div>
         `;
     });
@@ -528,9 +531,9 @@ function showAlternatives(originalExercise) {
     alternatives.forEach(alt => {
         alternativesHTML += `
             <div class="exercise-item">
-                <div class="exercise-title"><span class="math-inline">\{alt\.name\}</div\>
-<p\></span>{alt.instructions}</p>
-                <button class="btn btn-sm btn-primary" onclick="selectAlternative('<span class="math-inline">\{originalExercise\}', '</span>{alt.name}')">Seleccionar</button>
+                <div class="exercise-title">${alt.name}</div>
+                <p>${alt.instructions}</p>
+                <button class="btn btn-sm btn-primary" onclick="selectAlternative('${originalExercise}', '${alt.name}')">Seleccionar</button>
             </div>
         `;
     });
@@ -539,9 +542,9 @@ function showAlternatives(originalExercise) {
             <h2>Alternativas para: ${originalExercise}</h2>
             <p>Selecciona una alternativa:</p>
             <div class="alternatives-list">
-                <span class="math-inline">\{alternativesHTML\}
-</div\>
-<button class\="btn btn\-secondary" onclick\="trackExercise\('</span>{originalExercise}')">Volver al ejercicio principal</button>
+                ${alternativesHTML}
+            </div>
+            <button class="btn btn-secondary" onclick="trackExercise('${originalExercise}')">Volver al ejercicio principal</button>
              <button class="btn btn-secondary" onclick="showTodayWorkout()">Cancelar y Volver al entrenamiento</button>
         </div>
     `;
@@ -566,11 +569,10 @@ function showHIITWorkout() {
      appState.currentDayExercises = []; // Clear exercise list for non-resistance days
     saveAppState();
 
-
     const currentPhase = workoutProgram.phases[appState.currentPhase];
     mainContent.innerHTML = `
-        <div class="card">
-            <h2>Entrenamiento HIIT</h2>
+        <div class="card hiit-timer">
+            <h2>Temporizador HIIT</h2>
             <p>Fase: ${currentPhase.name}</p>
             <p>Completa los siguientes ejercicios:</p>
             <ul class="hiit-exercises">
@@ -738,23 +740,28 @@ function trackExercise(exercise) {
             </div>
 
              <div class="navigation-buttons">
-                <button class="btn btn-secondary" onclick="goToPreviousExercise('${exercise}')" <span class="math-inline">\{isFirstExercise ? 'disabled' \: ''\}\>Anterior</button\>
-<button class\="btn btn\-secondary" onclick\="goToNextExercise\('</span>{exercise}')" <span class="math-inline">\{isLastExercise ? 'disabled' \: ''\}\>Siguiente</button\>
-</div\>
-<button id\="voice\-button" class\="btn btn\-voice" onclick\="toggleVoiceRecognition\(\)"\>
-🎤 Iniciar reconocimiento de voz
-</button\>
-<div class\="actions"\>
-<button class\="btn btn\-primary" onclick\="saveExercise\('</span>{exercise}')">Guardar y Continuar</button>
+                <button class="btn btn-secondary" onclick="goToPreviousExercise('${exercise}')" ${isFirstExercise ? 'disabled' : ''}>Anterior</button>
+                <button class="btn btn-secondary" onclick="goToNextExercise('${exercise}')" ${isLastExercise ? 'disabled' : ''}>Siguiente</button>
+            </div>
+
+
+            <button id="voice-button" class="btn btn-voice" onclick="toggleVoiceRecognition()">
+                🎤 Iniciar reconocimiento de voz
+            </button>
+
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="saveExercise('${exercise}')">Guardar y Continuar</button>
                 <button class="btn btn-secondary" onclick="showTodayWorkout()">Cancelar</button>
-                 <button class="machine-busy-button" onclick="showAlternatives('<span class="math-inline">\{exercise\}'\)"\>
-⚠️ Máquina Ocupada
-</button\>
-</div\>
-</div\>
-<div id\="rest\-timer" class\="rest\-timer hidden"\>
-<h3\>Tiempo de Descanso</h3\>
-<div class\="timer\-display"\>00\:</span>{currentPhase.rest}</div>
+                 <button class="machine-busy-button" onclick="showAlternatives('${exercise}')">
+                    ⚠️ Máquina Ocupada
+                </button>
+            </div>
+        </div>
+
+        <div id="rest-timer" class="rest-timer hidden">
+            <h3>Tiempo de Descanso</h3>
+            <div class="timer-display">00:${currentPhase.rest}</div>
             <div class="timer-controls">
                 <button id="btn-start-timer" class="btn btn-primary" onclick="startTimer(${currentPhase.rest})">Iniciar</button>
                 <button id="btn-stop-timer" class="btn btn-danger" onclick="stopTimer()">Detener</button>
@@ -884,1063 +891,7 @@ function updateTimerDisplay() {
     const seconds = remainingTime % 60;
     const timerDisplay = document.querySelector('.timer-display');
     if (timerDisplay) {
-        timerDisplay.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
-    }
-}
-
-// Añadir un set al ejercicio actual
-function addSet(exercise, reps, weight) {
-    // Añadir a la UI
-    addSetToUI(reps, weight);
-    // Guardar en el estado temporal
-    appState.todayExercises[exercise].push({
-        reps,
-        weight,
-        timestamp: new Date().toISOString()
-    });
-    // Iniciar temporizador de descanso
-    const currentPhase = workoutProgram.phases[appState.currentPhase];
-    startTimer(currentPhase.rest);
-}
-
-// Añadir un set a la UI
-function addSetToUI(reps, weight) {
-    const setsContainer = document.getElementById('sets-container');
-    if (!setsContainer) return;
-    const setCount = setsContainer.children.length + 1;
-
-    const setElement = document.createElement('div');
-    setElement.className = 'set-item';
-    // Pass exercise name and set index for removeSet function
-    const exerciseElement = document.querySelector('.card h2');
-    // Get the exercise name from the H2, which correctly shows the primary or alternative name being tracked
-    const exerciseName = exerciseElement ? exerciseElement.textContent.replace('Registrar: ', '') : null;
-
-
-    if (!exerciseName) {
-        console.error("Could not determine exercise name for adding set to UI.");
-        return;
-    }
-
-    setElement.innerHTML = `
-        <div class="set-info">
-            <span class="set-number">Set <span class="math-inline">\{setCount\}\:</span\>
-<span class\="set\-data"\></span>{reps} reps × <span class="math-inline">\{weight\} kg</span\>
-</div\>
-<button class\="btn\-remove" onclick\="removeSet\(this, '</span>{exerciseName}', ${setCount - 1})">✕</button>
-    `;
-    setsContainer.appendChild(setElement);
-}
-
-// Eliminar un set
-function removeSet(element, exercise, index) {
-    // Eliminar de la UI
-    element.parentElement.remove();
-    // Eliminar del estado
-    if (appState.todayExercises[exercise] && appState.todayExercises[exercise].length > index) {
-        appState.todayExercises[exercise].splice(index, 1);
-    }
-
-    // Renumerar los sets restantes en la UI
-    const setsContainer = document.getElementById('sets-container');
-    if (setsContainer) {
-        const sets = setsContainer.querySelectorAll('.set-item');
-        sets.forEach((set, i) => {
-            const setNumber = set.querySelector('.set-number');
-            if (setNumber) {
-                setNumber.textContent = `Set ${i+1}:`;
-            }
-        });
-    }
-}
-
-// Guardar ejercicio y pasar al siguiente
-function saveExercise(exercise) { // 'exercise' here is the name of the exercise currently being tracked (primary or alternative)
-    const setsContainer = document.getElementById('sets-container');
-    if (!setsContainer || setsContainer.children.length === 0) {
-        alert('Debes añadir al menos un set');
-        return;
-    }
-
-    // Determine which exercise name to use for saving in history and marking as completed
-    // If we were tracking an alternative, save under the alternative's name in history
-    // but mark the original exercise in the daily list as completed.
-    const exerciseToSaveHistoryUnder = exercise; // Save history under the specific name tracked (alternative or primary)
-    const exerciseToMarkCompleted = appState.trackingAlternativeFor || exercise; // Mark the original exercise in the program list as completed
-
-
-    // Save in history under the name of the exercise being tracked (could be alternative)
-    appState.exerciseHistory[exerciseToSaveHistoryUnder] = {
-        sets: appState.todayExercises[exercise], // Save the sets recorded for the exercise name currently being tracked
-        date: new Date().toISOString()
-    };
-
-    // Mark the original exercise (or the tracked one if no alternative) in the daily list as completed
-    if (!appState.completedExercises.includes(exerciseToMarkCompleted)) {
-        appState.completedExercises.push(exerciseToMarkCompleted);
-    }
-
-    // Clear todayExercises for the exercise that was just saved/completed
-    delete appState.todayExercises[exercise]; // Clear temporary data for the exercise name that was tracked
-
-
-    // Clear the alternative tracking state after saving
-    appState.trackingAlternativeFor = null;
-
-
-    // Guardar estado
-    saveAppState();
-    // Mostrar mensaje de éxito (opcional, podrías quitarlo para una transición más fluida)
-    // alert('Ejercicio guardado correctamente.');
-
-    // --- Lógica para pasar al siguiente exercise in the current day's list ---
-    const exerciseList = appState.currentDayExercises; // Use the stored list for today
-    // Find the index of the *original* exercise that was just completed in the daily list
-    const currentExerciseIndex = exerciseList.indexOf(exerciseToMarkCompleted);
-
-
-    if (currentExerciseIndex !== -1 && currentExerciseIndex < exerciseList.length - 1) {
-        // Si hay un siguiente ejercicio en la lista de hoy
-        const nextExercise = exerciseList[currentExerciseIndex + 1];
-        // No need to clear todayExercises here, as it's cleared above for the saved exercise
-
-        trackExercise(nextExercise); // Show the screen for the next exercise in today's list
-    } else {
-        // Si no hay más ejercicios en la lista de hoy
-        appState.todayExercises = {}; // Clear any remaining temporary data just in case
-        saveAppState(); // Save the state
-        showTodayWorkout(); // Return to the main daily workout view
-        alert('¡Entrenamiento completado!'); // Message for end of training
-    }
-}
-
-
-// Confirmar reinicio del programa
-function confirmReset() {
-    if (confirm('¿Estás seguro de que quieres reiniciar todo el programa? Se perderán todos tus datos de progreso.')) {
-        // Mantener el permiso de micrófono
-        const micPermission = appState.micPermissionGranted;
-        // Reiniciar el estado de la aplicación
-        appState = {
-            currentPhase: 0,
-            currentWeek: 1,
-            startDate: new Date().toISOString(),
-            exerciseHistory: {},
-            todayExercises: {},
-            currentWorkoutDate: new Date().toISOString().split('T')[0],
-            completedExercises: [],
-            micPermissionGranted: micPermission, // Conservar el estado del permiso
-            trackingAlternativeFor: null,
-            currentDayExercises: []
-        };
-        // Guardar el nuevo estado
-        saveAppState();
-        // Actualizar la UI
-        // updatePhaseInfo(); // This function is no longer needed
-        showTodayWorkout();
-
-        alert('Programa reiniciado correctamente');
-    }
-}
-
-// Iniciar temporizador HIIT
-function startHIITTimer() {
-     // Clear any pending alternative tracking
-    appState.trackingAlternativeFor = null;
-     appState.currentDayExercises = []; // Clear exercise list for non-resistance days
-    saveAppState();
-
-    const workTime = 20; // segundos
-    const restTime = 10; // segundos
-    let currentRound = 1;
-    const totalRounds = 8;
-    let isWorkPeriod = true;
-
-    mainContent.innerHTML = `
-        <div class="card hiit-timer">
-            <h2>Temporizador HIIT</h2>
-            <div id="hiit-status">Preparados...</div>
-            <div id="hiit-timer" class="timer-display">00:${workTime}</div>
-            <div id="hiit-round">Ronda: ${currentRound} / ${totalRounds}</div>
-            <div id="hiit-phase">Trabajo</div>
-            <button id="btn-stop-hiit" class="btn btn-danger" onclick="showHIITWorkout()">Detener</button>
-        </div>
-    `;
-    // Cuenta regresiva inicial de 3 segundos
-    let countdown = 3;
-    const statusElement = document.getElementById('hiit-status');
-    const timerElement = document.getElementById('hiit-timer');
-    const roundElement = document.getElementById('hiit-round');
-    const phaseElement = document.getElementById('hiit-phase');
-
-    statusElement.textContent = `Comenzando en: ${countdown}`;
-    const countdownInterval = setInterval(() => {
-        countdown--;
-
-        if (countdown <= 0) {
-            clearInterval(countdownInterval);
-            statusElement.textContent = '¡Comienza!';
-            startHIITRounds();
-        } else {
-            statusElement.textContent = `Comenzando en: ${countdown}`;
-        }
-    }, 1000);
-    function startHIITRounds() {
-        let timeLeft = workTime;
-        updateTimerUI();
-        timerInterval = setInterval(() => {
-            timeLeft--;
-
-            if (timeLeft <= 0) {
-                // Cambiar entre trabajo y descanso
-                isWorkPeriod = !isWorkPeriod;
-
-                // Si termina un período de descanso, avanzar a la siguiente ronda
-                if (isWorkPeriod) {
-                    currentRound++;
-                    roundElement.textContent = `Ronda: ${currentRound} / ${totalRounds}`;
-                }
-
-                // Si completamos todas las rondas, terminar
-                if (currentRound > totalRounds) {
-                    clearInterval(timerInterval);
-                    statusElement.textContent = '¡Completado!';
-                    timerElement.textContent = '00:00';
-                    phaseElement.textContent = 'Descanso';
-
-                    setTimeout(() => {
-                        alert('¡Has completado tu entrenamiento HIIT!');
-                        showHIITWorkout();
-                    }, 1000);
-
-                    return;
-                }
-
-                // Configurar tiempo para el siguiente período
-                timeLeft = isWorkPeriod ? workTime : restTime;
-                phaseElement.textContent = isWorkPeriod ? 'Trabajo' : 'Descanso';
-                // Sonido o vibración aquí
-                if ('vibrate' in navigator) {
-                    navigator.vibrate([200, 100, 200]);
-                }
-
-                if (isWorkPeriod) {
-                    statusElement.textContent = '¡Trabaja!';
-                } else {
-                    statusElement.textContent = '¡Descansa!';
-                }
-            }
-
-            updateTimerUI();
-        }, 1000);
-
-        function updateTimerUI() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
-        }
-    }
-}
-
-
-// Variables para reconocimiento de voz
-let recognition = null;
-let isListening = false;
-// Inicializar reconocimiento de voz
-function initSpeechRecognition() {
-    // Verificar si ya existe una instancia
-    if (recognition) return true;
-    // Comprobar si el navegador soporta reconocimiento de voz
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('Tu navegador no soporta reconocimiento de voz. Intenta con Chrome o Edge.');
-        return false;
-    }
-
-    // Crear objeto de reconocimiento
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-
-    // Configurar para español y resultados continuos
-    recognition.lang = 'es-ES';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    // Evento al detectar resultados
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript.toLowerCase();
-        console.log('Reconocido:', transcript);
-
-        // Mostrar feedback visual
-        showVoiceFeedback(transcript);
-        // Procesar el texto reconocido
-        processVoiceCommand(transcript);
-    };
-    // Manejo de errores
-    recognition.onerror = function(event) {
-        console.error('Error de reconocimiento:', event.error);
-        stopListening();
-    };
-
-    // Evento al finalizar
-    recognition.onend = function() {
-        stopListening();
-    };
-
-    return true;
-}
-
-// Iniciar escucha
-function startListening() {
-    // No inicializar nuevamente si ya tenemos permiso y está configurado
-    if (!recognition && !initSpeechRecognition()) {
-        return;
-    }
-
-    try {
-        // Si no tenemos permiso guardado, solicitarlo primero
-        if (!appState.micPermissionGranted) {
-            requestMicrophoneAccess().then(granted => {
-                if (granted) {
-                    startListening(); // Intentar nuevamente después del permiso
-                }
-            });
-            return;
-        }
-
-        recognition.start();
-        isListening = true;
-
-        // Actualizar UI para mostrar que está escuchando
-        const voiceButton = document.getElementById('voice-button');
-        if (voiceButton) {
-            voiceButton.textContent = '🎤 Escuchando...';
-            voiceButton.classList.add('listening');
-        }
-    } catch (error) {
-        console.error('Error al iniciar reconocimiento:', error);
-    }
-}
-
-// Detener escucha
-function stopListening() {
-    if (!recognition) return;
-    try {
-        recognition.stop();
-    } catch (error) {
-        console.error('Error al detener reconocimiento:', error);
-    }
-
-    isListening = false;
-    // Actualizar UI
-    const voiceButton = document.getElementById('voice-button');
-    if (voiceButton) {
-        voiceButton.textContent = '🎤 Iniciar reconocimiento de voz';
-        voiceButton.classList.remove('listening');
-    }
-}
-
-// Alternar escucha
-function toggleVoiceRecognition() {
-    if (isListening) {
-        stopListening();
-    } else {
-        startListening();
-    }
-}
-
-// Mostrar feedback visual de reconocimiento
-function showVoiceFeedback(text) {
-    // Crear elemento de feedback
-    const feedback = document.createElement('div');
-    feedback.className = 'voice-feedback';
-    feedback.textContent = text;
-
-    // Añadir a la página
-    document.body.appendChild(feedback);
-    // Eliminar después de la animación
-    setTimeout(() => {
-        feedback.remove();
-    }, 3000);
-}
-
-// Mapeo de palabras numéricas a dígitos (en español)
-const numberWordMap = {
-    'un': '1', 'uno': '1',
-    'dos': '2',
-    'tres': '3',
-    'cuatro': '4',
-    'cinco': '5',
-    'seis': '6',
-    'siete': '7',
-    'ocho': '8',
-    'nueve': '9',
-    'diez': '10',
-    'once': '11',
-    'doce': '12',
-    'trece': '13',
-    'catorce': '14',
-    'quince': '15',
-    'dieciséis': '16', 'dieciseis': '16',
-    'diecisiete': '17', 'diecisiete': '17',
-    'dieciocho': '18', 'dieciocho': '18',
-    'diecinueve': '19', 'diecinueve': '19',
-    'veinte': '20',
-    'treinta': '30',
-    'cuarenta': '40',
-    'cincuenta': '50',
-    'sesenta': '60',
-    'setenta': '70',
-    'ochenta': '80',
-    'noventa': '90',
-    'cien': '100', 'ciento': '100',
-    // Puedes añadir más si es necesario, como "veintiuno", "treinta y cinco", etc.
-    // Para simplificar, nos enfocamos en palabras comunes que se transcriben como una sola palabra.
-    'veintiuno': '21',
-    'veintidós': '22', 'veintidos': '22',
-    'veintitrés': '23', 'veintitres': '23',
-    'veinticuatro': '24',
-    'veinticinco': '25',
-    'veintiséis': '26', 'veintiseis': '26',
-    'veintisiete': '27', 'veintisiete': '27',
-    'veintiocho': '28', 'veintiocho': '28',
-    'veintinueve': '29', 'veintinueve': '29'
-};
-
-
-// Procesar comando de voz - IMPROVED NUMBER AND NUMBER WORD DETECTION
-function processVoiceCommand(transcript) {
-    // Convert number words to digits in the transcript
-    let processedTranscript = transcript;
-    for (const word in numberWordMap) {
-        const digit = numberWordMap[word];
-        // Use a regex with word boundaries to avoid replacing parts of other words
-        const regex = new RegExp(`\\b${word}\\b`, 'gi');
-        processedTranscript = processedTranscript.replace(regex, digit);
-    }
-
-     console.log('Transcripción procesada (palabras a dígitos):', processedTranscript);
-
-
-    // Now find all digits in the processed transcript
-    const numbers = processedTranscript.match(/\d+/g);
-
-    let reps = null;
-    let weight = null;
-
-    if (numbers && numbers.length > 0) { // Check IF any numbers (digits now) were found
-        // First strategy: look for specific patterns (keep this as it's more precise)
-        // Use processedTranscript for pattern matching
-        if (processedTranscript.includes('repeticiones') || processedTranscript.includes('reps')) {
-            // Look for a number followed by optional space and then 'repeticiones' or 'reps'
-            const repsMatch = processedTranscript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
-            if (repsMatch) reps = repsMatch[1]; // Get the captured number (digit string)
-
-            // Look for a number followed by optional space and then 'kilos' or 'kg'
-            const weightMatch = processedTranscript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
-            if (weightMatch) weight = weightMatch[1]; // Get the captured number (digit string)
-        }
-
-        // Second strategy: if reps not found by pattern, assume the first number is reps
-        if (!reps && numbers.length >= 1) {
-            reps = numbers[0]; // Use the first detected digit string
-        }
-        // Third strategy: if weight not found by pattern and there's a second number, assume it's weight
-        if (!weight && numbers.length >= 2) {
-            weight = numbers[1]; // Use the second detected digit string
-        }
-
-        // If weight is still null (either no second number or not detected by pattern/position), use 0
-        if (!weight) {
-            weight = '0';
-        }
-
-        // If we successfully determined repetitions (which should happen if numbers were found), add the set
-        if (reps) {
-            const exerciseElement = document.querySelector('.card h2');
-            if (exerciseElement) {
-                const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
-                // Convert the extracted string numbers to actual numbers before passing to addSet
-                 console.log(`Detected Reps: ${reps} (string), Detected Weight: ${weight} (string)`);
-                 console.log(`Adding Set - Reps: ${parseInt(reps, 10)}, Weight: ${parseInt(weight, 10)}`);
-                addSet(exerciseName, parseInt(reps, 10), parseInt(weight, 10)); // Convert to numbers
-            }
-        } else {
-             // This case should ideally not be hit if numbers were found and assigned to reps,
-             // but as a fallback for unexpected transcription patterns even after word conversion.
-             console.warn("Numbers/words found but could not determine valid repetitions:", transcript, numbers);
-             alert('No se pudo determinar repeticiones válidas a partir de la transcripción. Intenta de nuevo.');
-        }
-
-    } else {
-        // If no numbers (digits after conversion) were found at all in the transcript
-        console.warn("No numbers or number words detected in transcript:", transcript);
-        alert('No se detectaron números. Intenta de nuevo.');
-    }
-}
-
-// Function to play the timer sound
-function playTimerSound() {
-    // Create an audio element
-    const audio = new Audio('timer-sound.mp3'); // Assuming the file is named timer-sound.mp3
-
-    // Attempt to play the sound
-    audio.play().catch(error => {
-        console.error('Error playing timer sound:', error);
-        // Fallback to alert if sound playback fails (e.g., file not found, playback error due to user gesture policy, etc.)
-        // Note: Autoplay without user interaction might be blocked by browsers.
-        alert('¡Tiempo de descanso finalizado!');
-    });
-}
-
-
-// Detener temporizador
-function stopTimer() {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-     // Ocultar el temporizador cuando se detiene manualmente o tiempo termina
-    const timerElement = document.getElementById('rest-timer');
-    if (timerElement) {
-        timerElement.classList.add('hidden');
-    }
-}
-
-// Actualizar display del temporizador
-function updateTimerDisplay() {
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
-    const timerDisplay = document.querySelector('.timer-display');
-    if (timerDisplay) {
-        timerDisplay.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
-    }
-}
-
-// Añadir un set al ejercicio actual
-function addSet(exercise, reps, weight) {
-    // Añadir a la UI
-    addSetToUI(reps, weight);
-    // Guardar en el estado temporal
-    appState.todayExercises[exercise].push({
-        reps,
-        weight,
-        timestamp: new Date().toISOString()
-    });
-    // Iniciar temporizador de descanso
-    const currentPhase = workoutProgram.phases[appState.currentPhase];
-    startTimer(currentPhase.rest);
-}
-
-// Añadir un set a la UI
-function addSetToUI(reps, weight) {
-    const setsContainer = document.getElementById('sets-container');
-    if (!setsContainer) return;
-    const setCount = setsContainer.children.length + 1;
-
-    const setElement = document.createElement('div');
-    setElement.className = 'set-item';
-    // Pass exercise name and set index for removeSet function
-    const exerciseElement = document.querySelector('.card h2');
-    // Get the exercise name from the H2, which correctly shows the primary or alternative name being tracked
-    const exerciseName = exerciseElement ? exerciseElement.textContent.replace('Registrar: ', '') : null;
-
-
-    if (!exerciseName) {
-        console.error("Could not determine exercise name for adding set to UI.");
-        return;
-    }
-
-    setElement.innerHTML = `
-        <div class="set-info">
-            <span class="set-number">Set <span class="math-inline">\{setCount\}\:</span\>
-<span class\="set\-data"\></span>{reps} reps × <span class="math-inline">\{weight\} kg</span\>
-</div\>
-<button class\="btn\-remove" onclick\="removeSet\(this, '</span>{exerciseName}', ${setCount - 1})">✕</button>
-    `;
-    setsContainer.appendChild(setElement);
-}
-
-// Eliminar un set
-function removeSet(element, exercise, index) {
-    // Eliminar de la UI
-    element.parentElement.remove();
-    // Eliminar del estado
-    if (appState.todayExercises[exercise] && appState.todayExercises[exercise].length > index) {
-        appState.todayExercises[exercise].splice(index, 1);
-    }
-
-    // Renumerar los sets restantes en la UI
-    const setsContainer = document.getElementById('sets-container');
-    if (setsContainer) {
-        const sets = setsContainer.querySelectorAll('.set-item');
-        sets.forEach((set, i) => {
-            const setNumber = set.querySelector('.set-number');
-            if (setNumber) {
-                setNumber.textContent = `Set ${i+1}:`;
-            }
-        });
-    }
-}
-
-// Guardar ejercicio y pasar al siguiente
-function saveExercise(exercise) { // 'exercise' here is the name of the exercise currently being tracked (primary or alternative)
-    const setsContainer = document.getElementById('sets-container');
-    if (!setsContainer || setsContainer.children.length === 0) {
-        alert('Debes añadir al menos un set');
-        return;
-    }
-
-    // Determine which exercise name to use for saving in history and marking as completed
-    // If we were tracking an alternative, save under the alternative's name in history
-    // but mark the original exercise in the daily list as completed.
-    const exerciseToSaveHistoryUnder = exercise; // Save history under the specific name tracked (alternative or primary)
-    const exerciseToMarkCompleted = appState.trackingAlternativeFor || exercise; // Mark the original exercise in the program list as completed
-
-
-    // Save in history under the name of the exercise being tracked (could be alternative)
-    appState.exerciseHistory[exerciseToSaveHistoryUnder] = {
-        sets: appState.todayExercises[exercise], // Save the sets recorded for the exercise name currently being tracked
-        date: new Date().toISOString()
-    };
-
-    // Mark the original exercise (or the tracked one if no alternative) in the daily list as completed
-    if (!appState.completedExercises.includes(exerciseToMarkCompleted)) {
-        appState.completedExercises.push(exerciseToMarkCompleted);
-    }
-
-    // Clear todayExercises for the exercise that was just saved/completed
-    delete appState.todayExercises[exercise]; // Clear temporary data for the exercise name that was tracked
-
-
-    // Clear the alternative tracking state after saving
-    appState.trackingAlternativeFor = null;
-
-
-    // Guardar estado
-    saveAppState();
-    // Mostrar mensaje de éxito (opcional, podrías quitarlo para una transición más fluida)
-    // alert('Ejercicio guardado correctamente.');
-
-    // --- Lógica para pasar al siguiente exercise in the current day's list ---
-    const exerciseList = appState.currentDayExercises; // Use the stored list for today
-    // Find the index of the *original* exercise that was just completed in the daily list
-    const currentExerciseIndex = exerciseList.indexOf(exerciseToMarkCompleted);
-
-
-    if (currentExerciseIndex !== -1 && currentExerciseIndex < exerciseList.length - 1) {
-        // Si hay un siguiente ejercicio en la lista de hoy
-        const nextExercise = exerciseList[currentExerciseIndex + 1];
-        // No need to clear todayExercises here, as it's cleared above for the saved exercise
-
-        trackExercise(nextExercise); // Show the screen for the next exercise in today's list
-    } else {
-        // Si no hay más ejercicios en la lista de hoy
-        appState.todayExercises = {}; // Clear any remaining temporary data just in case
-        saveAppState(); // Save the state
-        showTodayWorkout(); // Return to the main daily workout view
-        alert('¡Entrenamiento completado!'); // Message for end of training
-    }
-}
-
-
-// Confirmar reinicio del programa
-function confirmReset() {
-    if (confirm('¿Estás seguro de que quieres reiniciar todo el programa? Se perderán todos tus datos de progreso.')) {
-        // Mantener el permiso de micrófono
-        const micPermission = appState.micPermissionGranted;
-        // Reiniciar el estado de la aplicación
-        appState = {
-            currentPhase: 0,
-            currentWeek: 1,
-            startDate: new Date().toISOString(),
-            exerciseHistory: {},
-            todayExercises: {},
-            currentWorkoutDate: new Date().toISOString().split('T')[0],
-            completedExercises: [],
-            micPermissionGranted: micPermission, // Conservar el estado del permiso
-            trackingAlternativeFor: null,
-            currentDayExercises: []
-        };
-        // Guardar el nuevo estado
-        saveAppState();
-        // Actualizar la UI
-        // updatePhaseInfo(); // This function is no longer needed
-        showTodayWorkout();
-
-        alert('Programa reiniciado correctamente');
-    }
-}
-
-// Iniciar temporizador HIIT
-function startHIITTimer() {
-     // Clear any pending alternative tracking
-    appState.trackingAlternativeFor = null;
-     appState.currentDayExercises = []; // Clear exercise list for non-resistance days
-    saveAppState();
-
-    const workTime = 20; // segundos
-    const restTime = 10; // segundos
-    let currentRound = 1;
-    const totalRounds = 8;
-    let isWorkPeriod = true;
-
-    mainContent.innerHTML = `
-        <div class="card hiit-timer">
-            <h2>Temporizador HIIT</h2>
-            <div id="hiit-status">Preparados...</div>
-            <div id="hiit-timer" class="timer-display">00:${workTime}</div>
-            <div id="hiit-round">Ronda: ${currentRound} / ${totalRounds}</div>
-            <div id="hiit-phase">Trabajo</div>
-            <button id="btn-stop-hiit" class="btn btn-danger" onclick="showHIITWorkout()">Detener</button>
-        </div>
-    `;
-    // Cuenta regresiva inicial de 3 segundos
-    let countdown = 3;
-    const statusElement = document.getElementById('hiit-status');
-    const timerElement = document.getElementById('hiit-timer');
-    const roundElement = document.getElementById('hiit-round');
-    const phaseElement = document.getElementById('hiit-phase');
-
-    statusElement.textContent = `Comenzando en: ${countdown}`;
-    const countdownInterval = setInterval(() => {
-        countdown--;
-
-        if (countdown <= 0) {
-            clearInterval(countdownInterval);
-            statusElement.textContent = '¡Comienza!';
-            startHIITRounds();
-        } else {
-            statusElement.textContent = `Comenzando en: ${countdown}`;
-        }
-    }, 1000);
-    function startHIITRounds() {
-        let timeLeft = workTime;
-        updateTimerUI();
-        timerInterval = setInterval(() => {
-            timeLeft--;
-
-            if (timeLeft <= 0) {
-                // Cambiar entre trabajo y descanso
-                isWorkPeriod = !isWorkPeriod;
-
-                // Si termina un período de descanso, avanzar a la siguiente ronda
-                if (isWorkPeriod) {
-                    currentRound++;
-                    roundElement.textContent = `Ronda: ${currentRound} / ${totalRounds}`;
-                }
-
-                // Si completamos todas las rondas, terminar
-                if (currentRound > totalRounds) {
-                    clearInterval(timerInterval);
-                    statusElement.textContent = '¡Completado!';
-                    timerElement.textContent = '00:00';
-                    phaseElement.textContent = 'Descanso';
-
-                    setTimeout(() => {
-                        alert('¡Has completado tu entrenamiento HIIT!');
-                        showHIITWorkout();
-                    }, 1000);
-
-                    return;
-                }
-
-                // Configurar tiempo para el siguiente período
-                timeLeft = isWorkPeriod ? workTime : restTime;
-                phaseElement.textContent = isWorkPeriod ? 'Trabajo' : 'Descanso';
-                // Sonido o vibración aquí
-                if ('vibrate' in navigator) {
-                    navigator.vibrate([200, 100, 200]);
-                }
-
-                if (isWorkPeriod) {
-                    statusElement.textContent = '¡Trabaja!';
-                } else {
-                    statusElement.textContent = '¡Descansa!';
-                }
-            }
-
-            updateTimerUI();
-        }, 1000);
-
-        function updateTimerUI() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
-        }
-    }
-}
-
-
-// Variables para reconocimiento de voz
-let recognition = null;
-let isListening = false;
-// Inicializar reconocimiento de voz
-function initSpeechRecognition() {
-    // Verificar si ya existe una instancia
-    if (recognition) return true;
-    // Comprobar si el navegador soporta reconocimiento de voz
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('Tu navegador no soporta reconocimiento de voz. Intenta con Chrome o Edge.');
-        return false;
-    }
-
-    // Crear objeto de reconocimiento
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-
-    // Configurar para español y resultados continuos
-    recognition.lang = 'es-ES';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    // Evento al detectar resultados
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript.toLowerCase();
-        console.log('Reconocido:', transcript);
-
-        // Mostrar feedback visual
-        showVoiceFeedback(transcript);
-        // Procesar el texto reconocido
-        processVoiceCommand(transcript);
-    };
-    // Manejo de errores
-    recognition.onerror = function(event) {
-        console.error('Error de reconocimiento:', event.error);
-        stopListening();
-    };
-
-    // Evento al finalizar
-    recognition.onend = function() {
-        stopListening();
-    };
-
-    return true;
-}
-
-// Iniciar escucha
-function startListening() {
-    // No inicializar nuevamente si ya tenemos permiso y está configurado
-    if (!recognition && !initSpeechRecognition()) {
-        return;
-    }
-
-    try {
-        // Si no tenemos permiso guardado, solicitarlo primero
-        if (!appState.micPermissionGranted) {
-            requestMicrophoneAccess().then(granted => {
-                if (granted) {
-                    startListening(); // Intentar nuevamente después del permiso
-                }
-            });
-            return;
-        }
-
-        recognition.start();
-        isListening = true;
-
-        // Actualizar UI para mostrar que está escuchando
-        const voiceButton = document.getElementById('voice-button');
-        if (voiceButton) {
-            voiceButton.textContent = '🎤 Escuchando...';
-            voiceButton.classList.add('listening');
-        }
-    } catch (error) {
-        console.error('Error al iniciar reconocimiento:', error);
-    }
-}
-
-// Detener escucha
-function stopListening() {
-    if (!recognition) return;
-    try {
-        recognition.stop();
-    } catch (error) {
-        console.error('Error al detener reconocimiento:', error);
-    }
-
-    isListening = false;
-    // Actualizar UI
-    const voiceButton = document.getElementById('voice-button');
-    if (voiceButton) {
-        voiceButton.textContent = '🎤 Iniciar reconocimiento de voz';
-        voiceButton.classList.remove('listening');
-    }
-}
-
-// Alternar escucha
-function toggleVoiceRecognition() {
-    if (isListening) {
-        stopListening();
-    } else {
-        startListening();
-    }
-}
-
-// Mostrar feedback visual de reconocimiento
-function showVoiceFeedback(text) {
-    // Crear elemento de feedback
-    const feedback = document.createElement('div');
-    feedback.className = 'voice-feedback';
-    feedback.textContent = text;
-
-    // Añadir a la página
-    document.body.appendChild(feedback);
-    // Eliminar después de la animación
-    setTimeout(() => {
-        feedback.remove();
-    }, 3000);
-}
-
-// Mapeo de palabras numéricas a dígitos (en español)
-const numberWordMap = {
-    'un': '1', 'uno': '1',
-    'dos': '2',
-    'tres': '3',
-    'cuatro': '4',
-    'cinco': '5',
-    'seis': '6',
-    'siete': '7',
-    'ocho': '8',
-    'nueve': '9',
-    'diez': '10',
-    'once': '11',
-    'doce': '12',
-    'trece': '13',
-    'catorce': '14',
-    'quince': '15',
-    'dieciséis': '16', 'dieciseis': '16',
-    'diecisiete': '17', 'diecisiete': '17',
-    'dieciocho': '18', 'dieciocho': '18',
-    'diecinueve': '19', 'diecinueve': '19',
-    'veinte': '20',
-    'treinta': '30',
-    'cuarenta': '40',
-    'cincuenta': '50',
-    'sesenta': '60',
-    'setenta': '70',
-    'ochenta': '80',
-    'noventa': '90',
-    'cien': '100', 'ciento': '100',
-    // Puedes añadir más si es necesario, como "veintiuno", "treinta y cinco", etc.
-    // Para simplificar, nos enfocamos en palabras comunes que se transcriben como una sola palabra.
-    'veintiuno': '21',
-    'veintidós': '22', 'veintidos': '22',
-    'veintitrés': '23', 'veintitres': '23',
-    'veinticuatro': '24',
-    'veinticinco': '25',
-    'veintiséis': '26', 'veintiseis': '26',
-    'veintisiete': '27', 'veintisiete': '27',
-    'veintiocho': '28', 'veintiocho': '28',
-    'veintinueve': '29', 'veintinueve': '29'
-};
-
-
-// Procesar comando de voz - IMPROVED NUMBER AND NUMBER WORD DETECTION
-function processVoiceCommand(transcript) {
-    // Convert number words to digits in the transcript
-    let processedTranscript = transcript;
-    for (const word in numberWordMap) {
-        const digit = numberWordMap[word];
-        // Use a regex with word boundaries to avoid replacing parts of other words
-        const regex = new RegExp(`\\b${word}\\b`, 'gi');
-        processedTranscript = processedTranscript.replace(regex, digit);
-    }
-
-     console.log('Transcripción procesada (palabras a dígitos):', processedTranscript);
-
-
-    // Now find all digits in the processed transcript
-    const numbers = processedTranscript.match(/\d+/g);
-
-    let reps = null;
-    let weight = null;
-
-    if (numbers && numbers.length > 0) { // Check IF any numbers (digits now) were found
-        // First strategy: look for specific patterns (keep this as it's more precise)
-        // Use processedTranscript for pattern matching
-        if (processedTranscript.includes('repeticiones') || processedTranscript.includes('reps')) {
-            // Look for a number followed by optional space and then 'repeticiones' or 'reps'
-            const repsMatch = processedTranscript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
-            if (repsMatch) reps = repsMatch[1]; // Get the captured number (digit string)
-
-            // Look for a number followed by optional space and then 'kilos' or 'kg'
-            const weightMatch = processedTranscript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
-            if (weightMatch) weight = weightMatch[1]; // Get the captured number (digit string)
-        }
-
-        // Second strategy: if reps not found by pattern, assume the first number is reps
-        if (!reps && numbers.length >= 1) {
-            reps = numbers[0]; // Use the first detected digit string
-        }
-        // Third strategy: if weight not found by pattern and there's a second number, assume it's weight
-        if (!weight && numbers.length >= 2) {
-            weight = numbers[1]; // Use the second detected digit string
-        }
-
-        // If weight is still null (either no second number or not detected by pattern/position), use 0
-        if (!weight) {
-            weight = '0';
-        }
-
-        // If we successfully determined repetitions (which should happen if numbers were found), add the set
-        if (reps) {
-            const exerciseElement = document.querySelector('.card h2');
-            if (exerciseElement) {
-                const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
-                // Convert the extracted string numbers to actual numbers before passing to addSet
-                 console.log(`Detected Reps: ${reps} (string), Detected Weight: ${weight} (string)`);
-                 console.log(`Adding Set - Reps: ${parseInt(reps, 10)}, Weight: ${parseInt(weight, 10)}`);
-                addSet(exerciseName, parseInt(reps, 10), parseInt(weight, 10)); // Convert to numbers
-            }
-        } else {
-             // This case should ideally not be hit if numbers were found and assigned to reps,
-             // but as a fallback for unexpected transcription patterns even after word conversion.
-             console.warn("Numbers/words found but could not determine valid repetitions:", transcript, numbers);
-             alert('No se pudo determinar repeticiones válidas a partir de la transcripción. Intenta de nuevo.');
-        }
-
-    } else {
-        // If no numbers (digits after conversion) were found at all in the transcript
-        console.warn("No numbers or number words detected in transcript:", transcript);
-        alert('No se detectaron números. Intenta de nuevo.');
-    }
-}
-
-// Function to play the timer sound
-function playTimerSound() {
-    // Create an audio element
-    const audio = new Audio('timer-sound.mp3'); // Assuming the file is named timer-sound.mp3
-
-    // Attempt to play the sound
-    audio.play().catch(error => {
-        console.error('Error playing timer sound:', error);
-        // Fallback to alert if sound playback fails (e.g., file not found, playback error due to user gesture policy, etc.)
-        // Note: Autoplay without user interaction might be blocked by browsers.
-        alert('¡Tiempo de descanso finalizado!');
-    });
-}
-
-
-// Detener temporizador
-function stopTimer() {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-     // Ocultar el temporizador cuando se detiene manualmente o tiempo termina
-    const timerElement = document.getElementById('rest-timer');
-    if (timerElement) {
-        timerElement.classList.add('hidden');
-    }
-}
-
-// Actualizar display del temporizador
-function updateTimerDisplay() {
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
-    const timerDisplay = document.querySelector('.timer-display');
-    if (timerDisplay) {
-        timerDisplay.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 }
 
@@ -1982,10 +933,10 @@ function addSetToUI(reps, weight) {
     // relying on CSS for compactness on mobile.
     setElement.innerHTML = `
         <div class="set-info">
-            <span class="set-number">Set <span class="math-inline">\{setCount\}\:</span\>
-<span class\="set\-data"\></span>{reps} reps × <span class="math-inline">\{weight\} kg</span\>
-</div\>
-<button class\="btn\-remove" onclick\="removeSet\(this, '</span>{exerciseName}', ${setCount - 1})">✕</button>
+            <span class="set-number">Set ${setCount}:</span>
+            <span class="set-data">${reps} reps × ${weight} kg</span>
+        </div>
+        <button class="btn-remove" onclick="removeSet(this, '${exerciseName}', ${setCount - 1})">✕</button>
     `;
     setsContainer.appendChild(setElement);
 }
@@ -2195,7 +1146,7 @@ function startHIITTimer() {
         function updateTimerUI() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            timerElement.textContent = `<span class="math-inline">\{minutes\.toString\(\)\.padStart\(2, '0'\)\}\:</span>{seconds.toString().padStart(2, '0')}`;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
     }
 }
@@ -2284,4 +1235,177 @@ function stopListening() {
     if (!recognition) return;
     try {
         recognition.stop();
+    } catch (error) {
+        console.error('Error al detener reconocimiento:', error);
     }
+
+    isListening = false;
+    // Actualizar UI
+    const voiceButton = document.getElementById('voice-button');
+    if (voiceButton) {
+        voiceButton.textContent = '🎤 Iniciar reconocimiento de voz';
+        voiceButton.classList.remove('listening');
+    }
+}
+
+// Alternar escucha
+function toggleVoiceRecognition() {
+    if (isListening) {
+        stopListening();
+    } else {
+        startListening();
+    }
+}
+
+// Mostrar feedback visual de reconocimiento
+function showVoiceFeedback(text) {
+    // Crear elemento de feedback
+    const feedback = document.createElement('div');
+    feedback.className = 'voice-feedback';
+    feedback.textContent = text;
+
+    // Añadir a la página
+    document.body.appendChild(feedback);
+    // Eliminar después de la animación
+    setTimeout(() => {
+        feedback.remove();
+    }, 3000);
+}
+
+// Mapeo de palabras numéricas a dígitos (en español)
+const numberWordMap = {
+    'un': '1', 'uno': '1',
+    'dos': '2',
+    'tres': '3',
+    'cuatro': '4',
+    'cinco': '5',
+    'seis': '6',
+    'siete': '7',
+    'ocho': '8',
+    'nueve': '9',
+    'diez': '10',
+    'once': '11',
+    'doce': '12',
+    'trece': '13',
+    'catorce': '14',
+    'quince': '15',
+    'dieciséis': '16', 'dieciseis': '16',
+    'diecisiete': '17', 'diecisiete': '17',
+    'dieciocho': '18', 'dieciocho': '18',
+    'diecinueve': '19', 'diecinueve': '19',
+    'veinte': '20',
+    'treinta': '30',
+    'cuarenta': '40',
+    'cincuenta': '50',
+    'sesenta': '60',
+    'setenta': '70',
+    'ochenta': '80',
+    'noventa': '90',
+    'cien': '100', 'ciento': '100',
+    // Puedes añadir más si es necesario, como "veintiuno", "treinta y cinco", etc.
+    // Para simplificar, nos enfocamos en palabras comunes que se transcriben como una sola palabra.
+    'veintiuno': '21',
+    'veintidós': '22', 'veintidos': '22',
+    'veintitrés': '23', 'veintitres': '23',
+    'veinticuatro': '24',
+    'veinticinco': '25',
+    'veintiséis': '26', 'veintiseis': '26',
+    'veintisiete': '27', 'veintisiete': '27',
+    'veintiocho': '28', 'veintiocho': '28',
+    'veintinueve': '29', 'veintinueve': '29'
+};
+
+
+// Procesar comando de voz - IMPROVED NUMBER AND NUMBER WORD DETECTION
+function processVoiceCommand(transcript) {
+    // Convert number words to digits in the transcript
+    let processedTranscript = transcript;
+    for (const word in numberWordMap) {
+        const digit = numberWordMap[word];
+        // Use a regex with word boundaries to avoid replacing parts of other words
+        const regex = new RegExp(`\\b${word}\\b`, 'gi');
+        processedTranscript = processedTranscript.replace(regex, digit);
+    }
+
+     console.log('Transcripción procesada (palabras a dígitos):', processedTranscript);
+
+
+    // Now find all digits in the processed transcript
+    const numbers = processedTranscript.match(/\d+/g);
+
+    let reps = null;
+    let weight = null;
+
+    if (numbers && numbers.length > 0) { // Check IF any numbers (digits now) were found
+        // First strategy: look for specific patterns (keep this as it's more precise)
+        // Use processedTranscript for pattern matching
+        if (processedTranscript.includes('repeticiones') || processedTranscript.includes('reps')) {
+            // Look for a number followed by optional space and then 'repeticiones' or 'reps'
+            const repsMatch = processedTranscript.match(/(\d+)(?:\s+)(?:repeticiones|repetición|reps|rep)/);
+            if (repsMatch) reps = repsMatch[1]; // Get the captured number (digit string)
+
+            // Look for a number followed by optional space and then 'kilos' or 'kg'
+            const weightMatch = processedTranscript.match(/(\d+)(?:\s+)(?:kilos|kilo|kg)/);
+            if (weightMatch) weight = weightMatch[1]; // Get the captured number (digit string)
+        }
+
+        // Second strategy: if reps not found by pattern, assume the first number is reps
+        if (!reps && numbers.length >= 1) {
+            reps = numbers[0]; // Use the first detected digit string
+        }
+        // Third strategy: if weight not found by pattern and there's a second number, assume it's weight
+        if (!weight && numbers.length >= 2) {
+            weight = numbers[1]; // Use the second detected digit string
+        }
+
+        // If weight is still null (either no second number or not detected by pattern/position), use 0
+        if (!weight) {
+            weight = '0';
+        }
+
+        // If we successfully determined repetitions (which should happen if numbers were found), add the set
+        if (reps) {
+            const exerciseElement = document.querySelector('.card h2');
+            if (exerciseElement) {
+                const exerciseName = exerciseElement.textContent.replace('Registrar: ', '');
+                // Convert the extracted string numbers to actual numbers before passing to addSet
+                 console.log(`Detected Reps: ${reps} (string), Detected Weight: ${weight} (string)`);
+                 console.log(`Adding Set - Reps: ${parseInt(reps, 10)}, Weight: ${parseInt(weight, 10)}`);
+                addSet(exerciseName, parseInt(reps, 10), parseInt(weight, 10)); // Convert to numbers
+            }
+        } else {
+             // This case should ideally not be hit if numbers were found and assigned to reps,
+             // but as a fallback for unexpected transcription patterns even after word conversion.
+             console.warn("Numbers/words found but could not determine valid repetitions:", transcript, numbers);
+             alert('No se pudo determinar repeticiones válidas a partir de la transcripción. Intenta de nuevo.');
+        }
+
+    } else {
+        // If no numbers (digits after conversion) were found at all in the transcript
+        console.warn("No numbers or number words detected in transcript:", transcript);
+        alert('No se detectaron números. Intenta de nuevo.');
+    }
+}
+
+
+// Add this script to handle CSS styles dynamically if needed, but better to put in styles.css
+/*
+document.head.insertAdjacentHTML('beforeend', `
+<style>
+// Your CSS styles here
+</style>
+`);
+*/
+
+// Configuración PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('ServiceWorker registrado exitosamente:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Error al registrar ServiceWorker:', error);
+            });
+    });
+}

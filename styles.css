@@ -198,6 +198,10 @@ h3 {
     margin-right: 10px;
 }
 
+.set-data {
+     white-space: nowrap; /* Prevent the reps x weight string from wrapping */
+}
+
 .btn-remove {
     background-color: #dc3545;
     color: white;
@@ -302,7 +306,7 @@ h3 {
 }
 
 /* Ajustes para compatibilidad en móviles */
-@media (max-width: 600px) { /* Keep the breakpoint, but remove vertical stacking for columns */
+@media (max-width: 600px) { /* Keep the breakpoint, but adjust flex properties */
     .input-row {
         flex-direction: column;
     }
@@ -315,42 +319,101 @@ h3 {
         font-size: 2rem;
     }
 
-     /* Removed flex-direction: column for .exercise-details and .exercise-columns-container in this media query */
+    /* Adjust exercise column styles for horizontal fit on small screens */
+    .exercise-details .exercise-column,
+    .exercise-columns-container .exercise-column {
+        flex: 1 1 0; /* Allow columns to shrink below min-width if needed */
+        min-width: unset; /* Remove minimum width constraint in narrow view */
+        padding: 5px; /* Reduce padding */
+        /* Consider adjusting font size within columns if needed */
+        font-size: 0.9em; /* Slightly reduce font size */
+    }
 
-     .nav-buttons {
-         flex-direction: column;
-         gap: 10px;
+    /* Adjust column titles for smaller screens */
+    .column-title {
+        font-size: 0.8em; /* Make titles smaller */
+        margin-bottom: 3px; /* Reduce margin */
+        text-align: center; /* Center titles */
+    }
+
+    /* Make set items more compact */
+    .set-item {
+        padding: 8px 5px; /* Reduce padding */
+        margin-bottom: 5px; /* Reduce margin */
+        font-size: 0.9em; /* Reduce font size */
+    }
+
+    .set-number {
+        margin-right: 5px; /* Reduce margin */
+    }
+
+     .set-data {
+         white-space: nowrap; /* Prevent the reps x weight string from wrapping */
      }
 
-     .nav-buttons .btn {
-         width: 100%;
-     }
+
+    .btn-remove {
+        width: 20px; /* Make remove button smaller */
+        height: 20px;
+        font-size: 0.8em;
+    }
+
+
+    /* Adjust Actions buttons for smaller screens */
+    .actions {
+        gap: 5px; /* Reduce gap */
+    }
+
+    .actions .btn {
+        flex: 1 1 auto; /* Allow buttons to shrink and grow, wrap */
+        min-width: unset; /* Remove min-width */
+        padding: 8px; /* Reduce padding */
+        font-size: 0.9em; /* Reduce font size */
+    }
+
+    /* Adjust navigation buttons for smaller screens */
+    .navigation-buttons {
+        gap: 5px; /* Reduce gap */
+    }
+
+    .navigation-buttons .btn {
+        padding: 8px; /* Reduce padding */
+        font-size: 0.9em; /* Reduce font size */
+    }
 }
 
 /* Keep the .exercise-columns-container flex properties universally */
 .exercise-columns-container {
     display: flex; /* Arrange children (columns) in a row */
-    justify-content: space-between; /* Distribute space between columns */
-    gap: 15px; /* Add some space between the columns */
+    justify-content: space-between;
+    gap: 15px;
     margin-bottom: 15px;
-    flex-wrap: wrap; /* Allow columns to wrap to the next line on smaller screens - this helps with horizontal layout on narrow screens */
+    flex-wrap: wrap; /* Allow columns to wrap to the next line if needed */
 }
 
 .exercise-columns-container .exercise-column {
      flex: 1; /* Each column takes up equal space */
-     min-width: 100px; /* Adjust min-width slightly to allow more shrinking if needed */
+     min-width: 100px; /* Adjust min-width slightly */
      padding: 10px;
-     border: 1px solid #eee; /* Add a border for visual separation */
+     border: 1px solid #eee;
      border-radius: 8px;
      background-color: #f9f9f9;
      /* Add text-align or other styles as needed */
 }
 
+/* Ensure .exercise-details also uses flexbox for its columns */
+.exercise-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between detail columns */
+}
+
 /* Adjust .exercise-column within .exercise-details if needed, but the general .exercise-column styles should apply */
 .exercise-details .exercise-column {
-    flex: 1; /* Ensure columns take equal space */
+    flex: 1;
     min-width: 80px; /* Adjust min-width for potentially narrower columns here */
-    /* Remove margin-bottom from here if adding gap to .exercise-details */
     margin-bottom: 0; /* Remove margin-bottom when using gap */
 }
 
@@ -367,11 +430,11 @@ h3 {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
 }
 
 .navigation-buttons .btn {
-    flex: 1; /* Buttons take equal width */
+    flex: 1;
 }
 
 .navigation-buttons .btn:disabled {
@@ -381,7 +444,6 @@ h3 {
 
 
 /* === Additional Styles (like permission dialog, voice feedback) === */
-/* These were previously inline in app.js but are better placed here */
 
 .permission-dialog {
     position: fixed;
