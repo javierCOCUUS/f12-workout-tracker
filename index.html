@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F12 Workout Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>F12 Workout Tracker</h1>
+        </header>
+        
+        <!-- Información de fase actual -->
+        <div class="card phase-info">
+            <h2 id="current-phase">Fase Uno: Resistencia Muscular</h2>
+            <p>Semana <span id="current-week">1</span> de <span id="total-weeks">4</span></p>
+            <div class="phase-details">
+                <p><strong>Series:</strong> <span id="phase-sets">3</span></p>
+                <p><strong>Repeticiones:</strong> <span id="phase-reps">12-15</span></p>
+                <p><strong>Descanso:</strong> <span id="phase-rest">45s</span></p>
+                <p><strong>Tempo:</strong> <span id="phase-tempo">Lento</span></p>
+            </div>
+        </div>
+        
+        <!-- Navegación principal -->
+        <div class="nav-buttons">
+            <button id="btn-today" class="btn btn-primary">Entrenamiento de hoy</button>
+            <button id="btn-exercises" class="btn btn-secondary">Ver ejercicios</button>
+            <button id="btn-progress" class="btn btn-secondary">Mi progreso</button>
+        </div>
+        
+        <!-- Contenedor principal de contenido -->
+        <div id="main-content">
+            <!-- Aquí se cargará dinámicamente el contenido -->
+        </div>
+        
+        <!-- Temporizador de descanso -->
+        <div id="rest-timer" class="rest-timer hidden">
+            <h3>Tiempo de descanso</h3>
+            <div class="timer-display">00:45</div>
+            <div class="timer-controls">
+                <button id="btn-start-timer" class="btn btn-primary">Iniciar</button>
+                <button id="btn-stop-timer" class="btn btn-danger">Detener</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    line-height: 1.6;
+    background-color: #f5f5f5;
+    color: #333;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+/* Tarjetas */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Botones de navegación */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Fase actual */
+.phase-info {
+    background-color: #e6f7ff;
+    border-left: 4px solid #007bff;
+}
+
+.phase-details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+/* Ejercicios */
+.exercise-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.exercise-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.exercise-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.exercise-column {
+    flex: 1;
+    padding: 5px;
+}
+
+.column-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Temporizador */
+.rest-timer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.timer-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Utilidades */
+.hidden {
+    display: none;
+}
+
+.machine-busy-button {
+    background-color: #dc3545;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Para los campos de entrada */
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-field {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Estilos para set items */
+.set-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.set-info {
+    flex: 1;
+}
+
+.set-number {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.btn-remove {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Progreso */
+.progress-bar-container {
+    margin-top: 15px;
+}
+
+.progress-label {
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #007bff;
+}
+
+/* HIIT */
+.hiit-exercises {
+    list-style: none;
+    margin: 15px 0;
+}
+
+.hiit-exercises li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.hiit-timer {
+    text-align: center;
+}
+
+#hiit-status {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+#hiit-round, #hiit-phase {
+    margin: 10px 0;
+}
+
+/* Estilos para reconocimiento de voz */
+.btn-voice {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border: none;
+}
+
+.btn-voice.listening {
+    background-color: #f44336;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.voice-status {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 10px;
+    margin: 10px 0;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Ajustes para compatibilidad en móviles */
+@media (max-width: 500px) {
+    .input-row {
+        flex-direction: column;
+    }
+    
+    .input-field {
+        margin-bottom: 10px;
+    }
+    
+    .timer-display {
+        font-size: 2rem;
+    }
+}
+
+/* Feedback visual para comandos de voz detectados */
+.voice-feedback {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Diálogo de permiso */
+.permission-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.permission-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Ejercicios completados */
+.completed-exercise {
+    background-color: #e8f5e9 !important;
+    border-left: 4px solid #4CAF50;
+}
+
+/* Historial */
+.history-container {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.history-entry {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.history-date {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.history-exercise-name {
+    font-weight: bold;
+}
+
+.date-info {
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Datos previos */
+.previous-data {
+    background-color: #f0f8ff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border-left: 3px solid #007bff;
+}
+
+/* Botones pequeños */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Contenedor de sets */
+#sets-container {
+    margin: 15px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Acciones */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.actions .btn {
+    flex: 1;
+    min-width: 120px;
+}
