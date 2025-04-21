@@ -534,7 +534,7 @@ function showProgress() {
     `;
 }
 
-// Función para registrar un ejercicio - SOLO VOZ
+// Función para registrar un ejercicio
 function trackExercise(exercise) {
     const currentPhase = workoutProgram.phases[appState.currentPhase];
     // Obtener datos anteriores si existen
@@ -551,23 +551,33 @@ function trackExercise(exercise) {
         <div class="card">
             <h2>Registrar: ${exercise}</h2>
 
-            <div class="exercise-info">
-                <p><strong>Series recomendadas:</strong> ${currentPhase.sets}</p>
-                <p><strong>Repeticiones:</strong> ${currentPhase.reps}</p>
-                <p><strong>Descanso:</strong> ${currentPhase.rest}s</p>
+            <div class="exercise-columns-container">
+                <div class="exercise-column">
+                    <div class="column-title">Recomendado</div>
+                    <div class="exercise-info">
+                        <p><strong>Series:</strong> ${currentPhase.sets}</p>
+                        <p><strong>Repeticiones:</strong> ${currentPhase.reps}</p>
+                        <p><strong>Descanso:</strong> ${currentPhase.rest}s</p>
+                    </div>
+                </div>
+
+                <div class="exercise-column">
+                    <div class="column-title">Último Registro</div>
+                    ${previousData ?
+            `<div class="previous-data">
+                                <p><strong>Series:</strong> ${formatSets(previousData.sets)}</p>
+                                <p><strong>Fecha:</strong> ${formatDate(previousData.date)}</p>
+                            </div>`
+            : '<p>No hay registros anteriores.</p>'}
+                </div>
+
+                <div class="exercise-column">
+                     <div class="column-title">Hoy</div>
+                     <div id="sets-container" class="today-sets-container">
+                        </div>
+                </div>
             </div>
 
-            ${previousData ?
-        `
-                <div class="previous-data">
-                    <h3>Último registro (${formatDate(previousData.date)})</h3>
-                    <p><strong>Series:</strong> ${formatSets(previousData.sets)}</p>
-                </div>
-            ` : ''}
-
-
-            <div id="sets-container">
-                </div>
 
             <button id="voice-button" class="btn btn-voice" onclick="toggleVoiceRecognition()">
                 🎤 Iniciar reconocimiento de voz
@@ -675,12 +685,14 @@ function addSetToUI(reps, weight) {
 
     const setElement = document.createElement('div');
     setElement.className = 'set-item';
+    // Pass exercise name and set index for removeSet function
+    const exerciseName = document.querySelector('.card h2').textContent.replace('Registrar: ', '');
     setElement.innerHTML = `
         <div class="set-info">
             <span class="set-number">Set ${setCount}:</span>
             <span class="set-data">${reps} reps × ${weight} kg</span>
         </div>
-        <button class="btn-remove" onclick="removeSet(this, '${exercise}', ${setCount-1})">✕</button>
+        <button class="btn-remove" onclick="removeSet(this, '${exerciseName}', ${setCount - 1})">✕</button>
     `;
     setsContainer.appendChild(setElement);
 }
@@ -727,11 +739,29 @@ function saveExercise(exercise) {
 
     // Guardar estado
     saveAppState();
-    // Volver a la pantalla de entrenamiento
-    showTodayWorkout();
-    // Mostrar mensaje de éxito
-    alert('Ejercicio guardado correctamente. ¡Buen trabajo!');
+    // Mostrar mensaje de éxito (opcional, podrías quitarlo para una transición más fluida)
+    // alert('Ejercicio guardado correctamente.');
+
+    // --- Lógica para pasar al siguiente ejercicio ---
+    const currentPhase = workoutProgram.phases[appState.currentPhase];
+    const currentExerciseIndex = currentPhase.exercises.indexOf(exercise);
+
+    if (currentExerciseIndex !== -1 && currentExerciseIndex < currentPhase.exercises.length - 1) {
+        // Si hay un siguiente ejercicio en la lista
+        const nextExercise = currentPhase.exercises[currentExerciseIndex + 1];
+        // Limpiar los todayExercises para el nuevo ejercicio antes de pasar a la siguiente pantalla
+        appState.todayExercises = {};
+        saveAppState(); // Guardar el estado con todayExercises limpio para el nuevo ejercicio
+        trackExercise(nextExercise); // Mostrar la pantalla del siguiente ejercicio
+    } else {
+        // Si no hay más ejercicios en la lista actual
+        appState.todayExercises = {}; // Limpiar todayExercises al finalizar el entrenamiento del día
+        saveAppState(); // Guardar el estado con todayExercises limpio
+        showTodayWorkout(); // Volver a la pantalla de entrenamiento del día
+        alert('¡Entrenamiento completado!'); // Mensaje de fin de entrenamiento
+    }
 }
+
 
 // Confirmar reinicio del programa
 function confirmReset() {
@@ -1043,6 +1073,43 @@ document.head.insertAdjacentHTML('beforeend', `
     max-width: 400px;
     text-align: center;
 }
+
+/* Estilos para el contenedor de 3 columnas en la pantalla de registro */
+.exercise-columns-container {
+    display: flex;
+    justify-content: space-between; /* Distribute space between columns */
+    gap: 15px; /* Space between columns */
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+}
+
+.exercise-columns-container .exercise-column {
+     flex: 1; /* Allow columns to grow and shrink */
+     min-width: 150px; /* Minimum width for columns before wrapping */
+     padding: 10px;
+     border: 1px solid #eee;
+     border-radius: 8px;
+     background-color: #f9f9f9;
+}
+
+.exercise-columns-container .exercise-column .column-title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+.exercise-info p,
+.previous-data p {
+    margin-bottom: 5px;
+}
+
+.today-sets-container {
+    max-height: 150px; /* Limit height and enable scrolling for today's sets */
+    overflow-y: auto;
+    padding-right: 5px; /* Add some padding for the scrollbar */
+}
+
 
 .completed-exercise {
     background-color: #e8f5e9 !important;
